@@ -154,11 +154,25 @@ def dr_nim_first(coins=5, yourturn=1):
 
 numcount = 12;
 numstart = 1;
+yourwins = 0;
+yourloses = 0;
 while(numstart<numcount):
- print(str(numstart))
- print(dr_nim(False, numstart, 3));
+ drnimf = dr_nim(False, numstart, 3);
+ print(drnimf);
+ if(drnimf):
+  yourwins = yourwins + 1;
+ else:
+  yourloses = yourloses + 1;
  print("");
- print(dr_nim(True, numstart, 3));
+ drnims = dr_nim(True, numstart, 3);
+ print(drnims);
+ if(drnims):
+  yourwins = yourwins + 1;
+ else:
+  yourloses = yourloses + 1;
  if(numstart<(numcount - 1)):
   print("");
  numstart += 1;
+print("");
+print("Your Loses: "+str(yourloses));
+print("Your Wins: "+str(yourwins));
