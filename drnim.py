@@ -37,35 +37,80 @@ if(__version_info__[3]==None):
     https://en.wikipedia.org/wiki/Nim
 '''
 
-def dr_nim(gofirst=True, yourturn=1):
+def dr_nim(gofirst=True, coins=12, yourturn=1):
  if(gofirst is True):
-  return dr_nim_second(4, yourturn);
+  return dr_nim_second(coins, yourturn);
  else:
-  return dr_nim_first(5, yourturn);
+  return dr_nim_first(coins, yourturn);
 
 def dr_nim_second(coins=4, yourturn=1):
+ scoin = coins;
  if(yourturn<1 or yourturn>3):
   return False;
  else:
-  if(yourturn==1):
-   youtook = "one coin";
-   nimtook = "three coins";
-   nimturn = 3;
-  elif(yourturn==2):
-   youtook = "two coins";
-   nimtook = "two coins";
-   nimturn = 2;
+  drnimwon = True;
+  while(True):
+   if(coins>0):
+    if(yourturn==1 or coins==1):
+     youtook = "one coin";
+     if(coins==1):
+      yourturn = 1;
+    elif(yourturn==2 or coins==2):
+     youtook = "two coins";
+     if(coins==2):
+      yourturn = 2;
+    else:
+     youtook = "three coins";
+     if(coins==3):
+      yourturn = 3;
+    print("You took "+youtook+".");
+    coins -= yourturn;
+   if(coins<=0):
+    drnimwon = False;
+    break;
+   nimtook = "";
+   if(coins<8 and coins!=4):
+    if(coins==3):
+     nimtook = "three coins";
+     nimturn = 3;
+    elif(coins==5):
+     nimtook = "one coin";
+     nimturn = 1;
+    elif(coins==6):
+     nimtook = "two coin";
+     nimturn = 2;
+    elif(coins==7):
+     nimtook = "three coins";
+     nimturn = 3;
+    elif(coins==2):
+     nimtook = "two coins";
+     nimturn = 2;
+    elif(coins==1):
+     nimtook = "one coin";
+     nimturn = 1;
+   elif(int(coins % 3)==0):
+    nimtook = "three coins";
+    nimturn = 3;
+   elif(int(coins % 3)==1):
+    nimtook = "two coins";
+    nimturn = 2;
+   elif(int(coins % 3)==2):
+    nimtook = "one coin";
+    nimturn = 1;
+   if(nimtook!=""):
+    print("Dr Nim took "+nimtook+".");
+    coins -= nimturn;
+   if(coins<=0):
+    drnimwon = True;
+    break;
+  if(drnimwon):
+   print("You lose.");
+   print("Dr Nim wins.");
   else:
-   youtook = "three coins";
-   nimtook = "one coin";
-   nimturn = 3;
-  print("You took "+youtook+".");
-  coins -= yourturn;
-  print("Dr Nim took "+nimtook+".");
-  coins -= nimturn;
-  print("You lose.");
-  print("Dr Nim wins.");
-  if(coins<1):
+   print("You won.");
+   print("Dr Nim lose.");
+  print(str(scoin), str(coins));
+  if(coins==0):
    return True;
   else:
    return False;
@@ -74,23 +119,47 @@ def dr_nim_first(coins=5, yourturn=1):
  if(yourturn<1 or yourturn>7):
   return False;
  else:
-  if(coins==5):
-   print("Dr Nim took one coin.");
-   coins -= 1;
-  if(coins==6):
-   print("Dr Nim took two coins.");
-   coins -= 2;
-  if(coins==7):
-   print("Dr Nim took three coins.");
-   coins -= 3;
+  nimtook = "";
+  if(coins<8 and coins!=4):
+   if(coins==3):
+    nimtook = "three coins";
+    nimturn = 3;
+   elif(coins==5):
+    nimtook = "one coin";
+    nimturn = 1;
+   elif(coins==6):
+    nimtook = "two coin";
+    nimturn = 2;
+   elif(coins==7):
+    nimtook = "three coins";
+    nimturn = 3;
+   elif(coins==2):
+    nimtook = "two coins";
+    nimturn = 2;
+   elif(coins==1):
+    nimtook = "one coin";
+    nimturn = 1;
+  elif(int(coins % 3)==0):
+   nimtook = "three coins";
+   nimturn = 3;
+  elif(int(coins % 3)==1):
+   nimtook = "two coins";
+   nimturn = 2;
+  elif(int(coins % 3)==2):
+   nimtook = "one coin";
+   nimturn = 1;
+  if(nimtook!=""):
+   print("Dr Nim took "+nimtook+".");
+   coins -= nimturn;
   return dr_nim_second(coins, yourturn);
 
-numcount = 4;
+numcount = 12;
 numstart = 1;
 while(numstart<numcount):
- print(dr_nim(False, numstart));
+ print(str(numstart))
+ print(dr_nim(False, numstart, 3));
  print("");
- print(dr_nim(True, numstart));
+ print(dr_nim(True, numstart, 3));
  if(numstart<(numcount - 1)):
   print("");
  numstart += 1;
