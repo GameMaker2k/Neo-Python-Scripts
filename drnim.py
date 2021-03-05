@@ -109,11 +109,10 @@ def dr_nim_second(coins=4, yourturn=1):
   else:
    print("You won.");
    print("Dr Nim lose.");
-  print(str(scoin), str(coins));
-  if(coins==0):
-   return True;
-  else:
+  if(drnimwon):
    return False;
+  else:
+   return True;
 
 def dr_nim_first(coins=5, yourturn=1):
  if(yourturn<1 or yourturn>7):
