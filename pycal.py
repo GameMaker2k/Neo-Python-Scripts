@@ -156,13 +156,13 @@ def print_month(current_month, current_year, time_info, normal_start=True, grego
    print("");
  return True;
 
-def print_year(current_year, time_info, normal_start=True, gregorian=True):
+def print_year(current_year, time_info, normal_start=True, gregorian=True, revised=False):
  if(current_year<0):
   current_year = 0;
  print(str(current_year).center(20));
  current_month = 0;
  while(current_month<time_info['monthinfo']['numberofmonths']):
-  print_month(current_month, current_year, time_info, normal_start, gregorian, False);
+  print_month(current_month, current_year, time_info, normal_start, gregorian, revised, False);
   current_month += 1;
  return True;
 
