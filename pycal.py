@@ -292,14 +292,14 @@ if(__name__ == "__main__"):
 if(__name__ == "__main__"):
  if(getargs.month==0 and getargs.year<=0):
   if(getargs.three):
-   print_multiple_months(date.today().month, date.today().year, 1, 1, yearinfo, getargs.monday, getargs.julian, getargs.revised, getargs.week);
+   print_multiple_months(int(date.today().month - 1), date.today().year, 1, 1, yearinfo, getargs.monday, getargs.julian, getargs.revised, getargs.week);
   else:
-   print_month(date.today().month, date.today().year, yearinfo, getargs.monday, getargs.julian, getargs.revised, getargs.week, True);
+   print_month(int(date.today().month - 1), date.today().year, yearinfo, getargs.monday, getargs.julian, getargs.revised, getargs.week, True);
  elif(getargs.month==0 and getargs.year>0):
   if(getargs.three):
-   print_multiple_months(date.today().month, getargs.year, 1, 1, yearinfo, getargs.monday, getargs.julian, getargs.revised, getargs.week);
+   print_multiple_months(int(date.today().month - 1), getargs.year, 1, 1, yearinfo, getargs.monday, getargs.julian, getargs.revised, getargs.week);
   else:
-   print_month(date.today().month, getargs.year, yearinfo, getargs.monday, getargs.julian, getargs.revised, getargs.week, True);
+   print_month(int(date.today().month - 1), getargs.year, yearinfo, getargs.monday, getargs.julian, getargs.revised, getargs.week, True);
  elif(getargs.month<0 and getargs.year<=0):
   print_year(date.today().year, yearinfo, getargs.monday, getargs.julian, getargs.revised, getargs.week);
  elif(getargs.month<0 and getargs.year>0):
