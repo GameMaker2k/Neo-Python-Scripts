@@ -13,7 +13,7 @@
     Copyright 2018-2019 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2018-2019 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: pycal.py - Last Update: 1/3/2019 Ver. 1.0.0 RC 1 - Author: joshuatp $
+    $FileInfo: pycal.py - Last Update: 3/6/2021 Ver. 1.2.0 RC 1 - Author: joshuatp $
 '''
 
 from __future__ import print_function;
@@ -23,8 +23,8 @@ from datetime import date;
 __program_name__ = "PyCal";
 __project__ = __program_name__;
 __project_url__ = "https://gist.github.com/KazukiPrzyborowski";
-__version_info__ = (1, 0, 0, "RC 1", 1);
-__version_date_info__ = (2019, 1, 3, "RC 1", 1);
+__version_info__ = (1, 2, 0, "RC 1", 1);
+__version_date_info__ = (2021, 3, 6, "RC 1", 1);
 __version_date__ = str(__version_date_info__[0])+"."+str(__version_date_info__[1]).zfill(2)+"."+str(__version_date_info__[2]).zfill(2);
 if(__version_info__[4]!=None):
  __version_date_plusrc__ = __version_date__+"-"+str(__version_date_info__[4]);
@@ -63,7 +63,7 @@ def isleapyear_revised_julian(year):
  return True;
 
 def isleapyear(year, gregorian=True, revised=False):
- if(gregorian is True):
+ if(gregorian):
   return isleapyear_gregorian(year);
  else:
   if(revised):
@@ -89,19 +89,19 @@ def get_month_start(current_day, current_month, current_year, normal_start=True,
   else:
    count_century_list += 1;
   count_century += 1;
- if(gregorian is False):
+ if(not gregorian):
   century_code = (18 - century_code) % 7;
- if((current_month==0 or current_month==1) and (isleapyear(current_year, True) and gregorian is True)):
+ if((current_month==0 or current_month==1) and (isleapyear(current_year, True) and gregorian)):
   ret_val = int((year_code + month_code + century_code + current_day - 1) % 7);
-  if(normal_start is False):
+  if(not normal_start):
    if(ret_val > 0):
     ret_val -= 1;
    else:
     ret_val = 6;
   return ret_val;
- elif((current_month==0 or current_month==1) and (isleapyear(current_year, False) and gregorian is False)):
+ elif((current_month==0 or current_month==1) and (isleapyear(current_year, False) and not gregorian)):
   ret_val = int((year_code + month_code + century_code + current_day - 1) % 7);
-  if(normal_start is False):
+  if(not normal_start):
    if(ret_val > 0):
     ret_val -= 1;
    else:
@@ -109,25 +109,27 @@ def get_month_start(current_day, current_month, current_year, normal_start=True,
   return ret_val;
  else:
   ret_val = int((year_code + month_code + century_code + current_day) % 7);
-  if(normal_start is False):
+  if(not normal_start):
    if(ret_val > 0):
     ret_val -= 1;
    else:
     ret_val = 6;
   return ret_val;
 
-def print_month(current_month, current_year, time_info, normal_start=True, gregorian=True, revised=False, print_year=False):
+def print_month(current_month, current_year, time_info, normal_start=True, gregorian=True, revised=False, week_number=False, print_year=False):
  if(current_year<0):
   current_year = 0;
  month_start = get_month_start(1, current_month, current_year, normal_start, gregorian);
- if(print_year is False):
+ if(not print_year):
   print("");
   print(time_info['monthinfo']['longname'][current_month].center(20));
  else:
   print(str(time_info['monthinfo']['longname'][current_month]+" "+str(current_year)).center(20));
  numcountdays = 0;
+ if(week_number):
+  print("  ", end=" ");
  while(numcountdays<7):
-  if(normal_start is True):
+  if(normal_start):
    print(time_info['dayinfo']['shortname'][numcountdays], end=" ");
   else:
    print(time_info['dayinfo']['altshortname'][numcountdays], end=" ");
@@ -136,7 +138,7 @@ def print_month(current_month, current_year, time_info, normal_start=True, grego
   numcountdays = 0;
   print("");
  dacount = 0;
- if(isleapyear(current_year, True) and gregorian is True):
+ if(isleapyear(current_year, True) and gregorian):
   numberofdays = 0;
   if(current_month>0):
    mocount = 0;
@@ -144,7 +146,7 @@ def print_month(current_month, current_year, time_info, normal_start=True, grego
     dacount = dacount + time_info['monthinfo']['numberofdays']['leapyear'][mocount];
     mocount = mocount + 1;
   numdaysformonth = time_info['monthinfo']['numberofdays']['leapyear'][current_month];
- elif(isleapyear(current_year, False, revised) and gregorian is False):
+ elif(isleapyear(current_year, False, revised) and not gregorian):
   numberofdays = 0;
   if(current_month>0):
    mocount = 0;
@@ -160,17 +162,44 @@ def print_month(current_month, current_year, time_info, normal_start=True, grego
     dacount = dacount + time_info['monthinfo']['numberofdays']['normalyear'][mocount];
     mocount = mocount + 1;
   numdaysformonth = time_info['monthinfo']['numberofdays']['normalyear'][current_month];
+ if(not normal_start and current_month==0):
+  pdacount = 0;
+  if(isleapyear(int(current_year - 1), True) and gregorian):
+   pmocount = 0;
+   while(pmocount<len(time_info['monthinfo']['numberofdays']['leapyear'])):
+    pdacount = pdacount + time_info['monthinfo']['numberofdays']['leapyear'][pmocount];
+    pmocount = pmocount + 1;
+  elif(isleapyear(int(current_year - 1), False, revised) and not gregorian):
+   pmocount = 0;
+   while(pmocount<len(time_info['monthinfo']['numberofdays']['leapyear'])):
+    pdacount = pdacount + time_info['monthinfo']['numberofdays']['leapyear'][pmocount];
+    pmocount = pmocount + 1;
+  else:
+   pmocount = 0;
+   while(pmocount<len(time_info['monthinfo']['numberofdays']['normalyear'])):
+    pdacount = pdacount + time_info['monthinfo']['numberofdays']['normalyear'][pmocount];
+    pmocount = pmocount + 1;
  numcountdaysformonth = 1;
- while(numcountdaysformonth <= numdaysformonth):
+ while(numcountdaysformonth<=numdaysformonth):
   numcountdays = 0;
+  if(numcountdaysformonth==1):
+   if(current_month<=0 and normal_start):
+    weeknum = int(dacount / 7) + 1;
+   elif(current_month<=0 and not normal_start):
+    weeknum = int(pdacount / 7) + 2;
+   else:
+    weeknum = int(dacount / 7) + 2;
+   if(week_number):
+    print(str(weeknum).rjust(2), end=" ");
+   dacount = dacount + 1;
   while(numcountdays<month_start and numcountdaysformonth==1):
    print("  ", end=" ");
    numcountdays += 1;
   numweek = 0;
-  while(numcountdays<7 and numcountdaysformonth <= numdaysformonth):
-   weeknum = int(dacount / 7) + 1;
-   if(numcountdays==0 or numcountdaysformonth==1):
-    print("("+str(weeknum)+")", numcountdaysformonth, end=" " );
+  while(numcountdays<7 and numcountdaysformonth<=numdaysformonth):
+   weeknum = int(dacount / 7) + 2;
+   if(numcountdays==0 and week_number):
+    print(str(weeknum).rjust(2), end=" ");
    dacount = dacount + 1;
    print(str(numcountdaysformonth).rjust(2), end=" ");
    numcountdays += 1;
@@ -180,7 +209,7 @@ def print_month(current_month, current_year, time_info, normal_start=True, grego
    print("");
  return True;
 
-def print_year(current_year, time_info, normal_start=True, gregorian=True, revised=False):
+def print_year(current_year, time_info, normal_start=True, gregorian=True, revised=False, week_number=False):
  if(current_year<0):
   current_year = 0;
  print(str(current_year).center(20));
@@ -218,21 +247,22 @@ if(__name__ == "__main__"):
  parser.add_argument("-o", "--monday", action="store_false", help = "start weeks on monday");
  parser.add_argument("-j", "--julian", action="store_false", help = "use the julian calendar");
  parser.add_argument("-r", "--revised", action="store_true", help = "use revised julian calendar");
+ parser.add_argument("-w", "--week", action="store_true", help = "show US or ISO-8601 week numbers");
  parser.add_argument("-v", "--version", action = "version", version = __program_name__+" "+__version__);
  getargs = parser.parse_args();
 
 if(__name__ == "__main__"):
  if(getargs.month==0 and getargs.year<=0):
-  print_month((date.today().month-1), date.today().year, yearinfo, getargs.monday, getargs.julian, getargs.revised, True);
+  print_month((date.today().month-1), date.today().year, yearinfo, getargs.monday, getargs.julian, getargs.revised, getargs.week, True);
  elif(getargs.month==0 and getargs.year>0):
-  print_month((date.today().month-1), getargs.year, yearinfo, getargs.monday, getargs.julian, getargs.revised, True);
+  print_month((date.today().month-1), getargs.year, yearinfo, getargs.monday, getargs.julian, getargs.revised, getargs.week, True);
  elif(getargs.month<0 and getargs.year<=0):
-  print_year(date.today().year, yearinfo, getargs.monday, getargs.julian, getargs.revised);
+  print_year(date.today().year, yearinfo, getargs.monday, getargs.julian, getargs.revised, getargs.week);
  elif(getargs.month<0 and getargs.year>0):
-  print_year(getargs.year, yearinfo, getargs.monday, getargs.julian, getargs.revised);
+  print_year(getargs.year, yearinfo, getargs.monday, getargs.julian, getargs.revised, getargs.week);
  elif(getargs.month>0 and getargs.year<=0):
-  print_month((getargs.month-1), date.today().year, yearinfo, getargs.monday, getargs.julian, getargs.revised, True);
+  print_month((getargs.month-1), date.today().year, yearinfo, getargs.monday, getargs.julian, getargs.revised, getargs.week, True);
  elif(getargs.month>0 and getargs.year>0):
-  print_month((getargs.month-1), getargs.year, yearinfo, getargs.monday, getargs.julian, getargs.revised, True);
+  print_month((getargs.month-1), getargs.year, yearinfo, getargs.monday, getargs.julian, getargs.revised, getargs.week, True);
  else:
-  print_year(getargs.year, yearinfo, getargs.monday, getargs.julian, getargs.revised);
+  print_year(getargs.year, yearinfo, getargs.monday, getargs.julian, getargs.revised, getargs.week);
