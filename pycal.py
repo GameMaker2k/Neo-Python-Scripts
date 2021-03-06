@@ -135,11 +135,30 @@ def print_month(current_month, current_year, time_info, normal_start=True, grego
  else:
   numcountdays = 0;
   print("");
+ dacount = 0;
  if(isleapyear(current_year, True) and gregorian is True):
+  numberofdays = 0;
+  if(current_month>0):
+   mocount = 0;
+   while(mocount<current_month):
+    dacount = dacount + time_info['monthinfo']['numberofdays']['leapyear'][mocount];
+    mocount = mocount + 1;
   numdaysformonth = time_info['monthinfo']['numberofdays']['leapyear'][current_month];
  elif(isleapyear(current_year, False, revised) and gregorian is False):
+  numberofdays = 0;
+  if(current_month>0):
+   mocount = 0;
+   while(mocount<current_month):
+    dacount = dacount + time_info['monthinfo']['numberofdays']['leapyear'][mocount];
+    mocount = mocount + 1;
   numdaysformonth = time_info['monthinfo']['numberofdays']['leapyear'][current_month];
  else:
+  numberofdays = 0;
+  if(current_month>0):
+   mocount = 0;
+   while(mocount<current_month):
+    dacount = dacount + time_info['monthinfo']['numberofdays']['normalyear'][mocount];
+    mocount = mocount + 1;
   numdaysformonth = time_info['monthinfo']['numberofdays']['normalyear'][current_month];
  numcountdaysformonth = 1;
  while(numcountdaysformonth <= numdaysformonth):
@@ -147,7 +166,12 @@ def print_month(current_month, current_year, time_info, normal_start=True, grego
   while(numcountdays<month_start and numcountdaysformonth==1):
    print("  ", end=" ");
    numcountdays += 1;
+  numweek = 0;
   while(numcountdays<7 and numcountdaysformonth <= numdaysformonth):
+   weeknum = int(dacount / 7) + 1;
+   if(numcountdays==0 or numcountdaysformonth==1):
+    print("("+str(weeknum)+")", numcountdaysformonth, end=" " );
+   dacount = dacount + 1;
    print(str(numcountdaysformonth).rjust(2), end=" ");
    numcountdays += 1;
    numcountdaysformonth += 1;
