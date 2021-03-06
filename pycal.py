@@ -13,7 +13,7 @@
     Copyright 2018-2019 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2018-2019 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: pycal.py - Last Update: 3/6/2021 Ver. 1.2.0 RC 1 - Author: joshuatp $
+    $FileInfo: pycal.py - Last Update: 1/3/2019 Ver. 1.0.0 RC 1 - Author: joshuatp $
 '''
 
 from __future__ import print_function;
@@ -23,8 +23,8 @@ from datetime import date;
 __program_name__ = "PyCal";
 __project__ = __program_name__;
 __project_url__ = "https://gist.github.com/KazukiPrzyborowski";
-__version_info__ = (1, 2, 0, "RC 1", 1);
-__version_date_info__ = (2021, 3, 6, "RC 1", 1);
+__version_info__ = (1, 0, 0, "RC 1", 1);
+__version_date_info__ = (2019, 1, 3, "RC 1", 1);
 __version_date__ = str(__version_date_info__[0])+"."+str(__version_date_info__[1]).zfill(2)+"."+str(__version_date_info__[2]).zfill(2);
 if(__version_info__[4]!=None):
  __version_date_plusrc__ = __version_date__+"-"+str(__version_date_info__[4]);
@@ -186,7 +186,7 @@ def print_month(current_month, current_year, time_info, normal_start=True, grego
    if(current_month<=0 and normal_start):
     weeknum = int(dacount / 7) + 1;
    elif(current_month<=0 and not normal_start):
-    weeknum = int(pdacount / 7) + 2;
+    weeknum = int(pdacount / 7);
    else:
     weeknum = int(dacount / 7) + 2;
    if(week_number):
@@ -197,7 +197,10 @@ def print_month(current_month, current_year, time_info, normal_start=True, grego
    numcountdays += 1;
   numweek = 0;
   while(numcountdays<7 and numcountdaysformonth<=numdaysformonth):
-   weeknum = int(dacount / 7) + 2;
+   if(normal_start):
+    weeknum = int(dacount / 7) + 2;
+   else:
+    weeknum = int(dacount / 7) + 1;
    if(numcountdays==0 and week_number):
     print(str(weeknum).rjust(2), end=" ");
    dacount = dacount + 1;
