@@ -13,7 +13,7 @@
     Copyright 2018-2019 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2018-2019 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: pycal.py - Last Update: 1/3/2019 Ver. 1.0.0 RC 1 - Author: joshuatp $
+    $FileInfo: pycal.py - Last Update: 3/6/2021 Ver. 1.2.0 RC 1 - Author: joshuatp $
 '''
 
 from __future__ import print_function;
@@ -22,9 +22,9 @@ from datetime import date;
 
 __program_name__ = "PyCal";
 __project__ = __program_name__;
-__project_url__ = "https://gist.github.com/KazukiPrzyborowski";
-__version_info__ = (1, 0, 0, "RC 1", 1);
-__version_date_info__ = (2019, 1, 3, "RC 1", 1);
+__project_url__ = "https://github.com/GameMaker2k/Neo-Python-Scripts";
+__version_info__ = (1, 2, 0, "RC 1", 1);
+__version_date_info__ = (2019, 3, 6, "RC 1", 1);
 __version_date__ = str(__version_date_info__[0])+"."+str(__version_date_info__[1]).zfill(2)+"."+str(__version_date_info__[2]).zfill(2);
 if(__version_info__[4]!=None):
  __version_date_plusrc__ = __version_date__+"-"+str(__version_date_info__[4]);
