@@ -120,6 +120,7 @@ def print_month(current_month, current_year, time_info, normal_start=True, grego
  if(current_year<0):
   current_year = 0;
  month_start = get_month_start(1, current_month, current_year, normal_start, gregorian);
+ jan_month_start = get_month_start(1, 1, current_year, normal_start, gregorian);
  if(not print_year):
   print("");
   print(time_info['monthinfo']['longname'][current_month].center(20));
@@ -180,6 +181,7 @@ def print_month(current_month, current_year, time_info, normal_start=True, grego
     pdacount = pdacount + time_info['monthinfo']['numberofdays']['normalyear'][pmocount];
     pmocount += 1;
  numcountdaysformonth = 1;
+ numweek = 0;
  while(numcountdaysformonth<=numdaysformonth):
   numcountdays = 0;
   if(numcountdaysformonth==1):
@@ -195,7 +197,6 @@ def print_month(current_month, current_year, time_info, normal_start=True, grego
   while(numcountdays<month_start and numcountdaysformonth==1):
    print("  ", end=" ");
    numcountdays += 1;
-  numweek = 0;
   while(numcountdays<7 and numcountdaysformonth<=numdaysformonth):
    if(normal_start):
     weeknum = int(dacount / 7) + 2;
@@ -209,6 +210,7 @@ def print_month(current_month, current_year, time_info, normal_start=True, grego
    numcountdaysformonth += 1;
   else:
    numcountdays = 0;
+   numweek += 1;
    print("");
  return True;
 
