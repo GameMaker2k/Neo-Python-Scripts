@@ -123,9 +123,15 @@ def print_month(current_month, current_year, time_info, normal_start=True, grego
  jan_month_start = get_month_start(1, 1, current_year, time_info, normal_start, gregorian);
  if(not print_year):
   print("");
-  print(time_info['monthinfo']['longname'][current_month].center(20));
+  if(week_number):
+   print(time_info['monthinfo']['longname'][current_month].center(26));
+  else:
+   print(time_info['monthinfo']['longname'][current_month].center(20));
  else:
-  print(str(time_info['monthinfo']['longname'][current_month]+" "+str(current_year)).center(20));
+  if(week_number):
+   print(str(time_info['monthinfo']['longname'][current_month]+" "+str(current_year)).center(26));
+  else:
+   print(str(time_info['monthinfo']['longname'][current_month]+" "+str(current_year)).center(20));
  numcountdays = 0;
  if(week_number):
   print("  ", end=" ");
