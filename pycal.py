@@ -116,6 +116,32 @@ def get_month_start(current_day, current_month, current_year, time_info, normal_
     ret_val = 6;
   return ret_val;
 
+def count_number_of_days(current_month, current_year, time_info, gregorian=True, revised=False):
+ daycount = 0;
+ if(isleapyear(int(current_year - 1), True) and gregorian):
+  monthcount = current_month;
+  while(monthcount<len(time_info['monthinfo']['numberofdays']['leapyear'])):
+   daycount = daycount + time_info['monthinfo']['numberofdays']['leapyear'][monthcount];
+   monthcount += 1;
+ elif(isleapyear(int(current_year - 1), False, revised) and not gregorian):
+  monthcount = current_month;
+  while(monthcount<len(time_info['monthinfo']['numberofdays']['leapyear'])):
+   daycount = daycount + time_info['monthinfo']['numberofdays']['leapyear'][monthcount];
+   monthcount += 1;
+ else:
+  monthcount = current_month;
+  while(monthcount<len(time_info['monthinfo']['numberofdays']['normalyear'])):
+   daycount = daycount + time_info['monthinfo']['numberofdays']['normalyear'][monthcount];
+   monthcount += 1;
+ return daycount;
+
+def get_week_number(current_date, current_month, current_year, time_info, normal_start=True, gregorian=True, revised=False):
+ if(not normal_start and current_month==0 and startofmonth>=3):
+  pdacount = count_number_of_days(0, int(current_year - 1), time_info, gregorian);
+  weeknum = int(pdacount / 7);
+  return weeknum;
+ return 1;
+
 def print_month(current_month, current_year, time_info, normal_start=True, gregorian=True, revised=False, week_number=False, print_year=False):
  if(current_year<0):
   current_year = 0;
@@ -292,7 +318,9 @@ yearinfo = {
   'month_code_list': { 0: 0, 1: 3, 2: 3, 3: 6, 4: 1, 5: 4, 6: 6, 7: 2, 8: 5, 9: 0, 10: 3, 11: 5 },
   'numberofdays': { 
    'normalyear': { 0: 31, 1: 28, 2: 31, 3: 30, 4: 31, 5: 30, 6: 31, 7: 31, 8: 30, 9: 31, 10: 30, 11: 31 },
-   'leapyear': { 0: 31, 1: 29, 2: 31, 3: 30, 4: 31, 5: 30, 6: 31, 7: 31, 8: 30, 9: 31, 10: 30, 11: 31 }
+   'leapyear': { 0: 31, 1: 29, 2: 31, 3: 30, 4: 31, 5: 30, 6: 31, 7: 31, 8: 30, 9: 31, 10: 30, 11: 31 },
+   'ordinaldayny': { 0: 0, 1: 31, 2: 59, 3: 90, 4: 120, 5: 151, 6: 181, 7: 212, 8: 243, 9: 273, 10: 304, 11: 334 },
+   'ordinaldayly': { 0: 0, 1: 31, 2: 60, 3: 91, 4: 121, 5: 152, 6: 182, 7: 213, 8: 244, 9: 274, 10: 305, 11: 335 },
   }
  }
 }
