@@ -219,10 +219,31 @@ def print_month(current_month, current_year, time_info, normal_start=True, grego
   if(numcountdaysformonth==1):
    if(current_month<=0 and normal_start):
     weeknum = int(dacount / 7) + 1;
-   elif(current_month<=0 and not normal_start):
-    weeknum = int(pdacount / 7);
+   elif(current_month<=0 and month_start>=4 and not normal_start):
+    if(jan_month_start>=4):
+     weeknum = int(pdacount / 7);
+    else:
+     weeknum = int(pdacount / 7) + 1;
    else:
-    weeknum = int(dacount / 7) + 2;
+    if(month_start>=5 and current_month>0 and normal_start):
+     weeknum = int(dacount / 7) + 1;
+    elif(current_month>0 and month_start>=4 and not normal_start):
+     if(jan_month_start>=4):
+      weeknum = int(dacount / 7) + 1;
+     else:
+      weeknum = int(dacount / 7);
+    elif(current_month>0 and not normal_start):
+     if(jan_month_start>=4):
+      weeknum = int(dacount / 7) + 1;
+     else:
+      weeknum = int(dacount / 7) + 1;
+    elif(not normal_start):
+     if(jan_month_start>=4):
+      weeknum = int(dacount / 7) + 1;
+     else:
+      weeknum = int(dacount / 7) + 1;
+    else:
+     weeknum = int(dacount / 7) + 2;
    if(week_number):
     print(str(weeknum).rjust(2), end=" ");
    dacount += 1;
@@ -233,8 +254,11 @@ def print_month(current_month, current_year, time_info, normal_start=True, grego
    if(normal_start):
     weeknum = int(dacount / 7) + 2;
    else:
-    weeknum = int(dacount / 7) + 1;
-   if(numcountdays==0 and week_number):
+    if(jan_month_start>=4):
+     weeknum = int(dacount / 7) + 2;
+    else:
+     weeknum = int(dacount / 7) + 1;
+   if(numcountdays==0 and numweek!=0 and week_number):
     print(str(weeknum).rjust(2), end=" ");
    dacount += 1;
    print(str(numcountdaysformonth).rjust(2), end=" ");
