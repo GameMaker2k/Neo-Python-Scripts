@@ -72,11 +72,11 @@ def isleapyear(year, gregorian=True, revised=False):
    return isleapyear_julian(year);
  return True;
 
-def get_month_start(current_day, current_month, current_year, normal_start=True, gregorian=True):
+def get_month_start(current_day, current_month, current_year, time_info, normal_start=True, gregorian=True):
  current_century = (current_year - 1) // 100 + 1;
  current_year_short = abs(current_year) % 100;
  year_code = (current_year_short + (current_year_short / 4)) % 7;
- month_code_list = { 0: 0, 1: 3, 2: 3, 3: 6, 4: 1, 5: 4, 6: 6, 7: 2, 8: 5, 9: 0, 10: 3, 11: 5 }
+ month_code_list = time_info['monthinfo']['month_code_list'];
  month_code = month_code_list[current_month];
  century_code_list = [0, 6, 4, 2];
  count_century = 0;
@@ -119,8 +119,8 @@ def get_month_start(current_day, current_month, current_year, normal_start=True,
 def print_month(current_month, current_year, time_info, normal_start=True, gregorian=True, revised=False, week_number=False, print_year=False):
  if(current_year<0):
   current_year = 0;
- month_start = get_month_start(1, current_month, current_year, normal_start, gregorian);
- jan_month_start = get_month_start(1, 1, current_year, normal_start, gregorian);
+ month_start = get_month_start(1, current_month, current_year, time_info, normal_start, gregorian);
+ jan_month_start = get_month_start(1, 1, current_year, time_info, normal_start, gregorian);
  if(not print_year):
   print("");
   print(time_info['monthinfo']['longname'][current_month].center(20));
@@ -247,6 +247,7 @@ def print_multiple_months(current_month, current_year, before, after, time_info,
   mcount += 1;
   if((start_month>end_month and start_year==end_year) or (start_year>end_year)):
    break;
+ return True;
 
 def print_year(current_year, time_info, normal_start=True, gregorian=True, revised=False, week_number=False):
  if(current_year<0):
@@ -256,6 +257,16 @@ def print_year(current_year, time_info, normal_start=True, gregorian=True, revis
  while(current_month<time_info['monthinfo']['numberofmonths']):
   print_month(current_month, current_year, time_info, normal_start, gregorian, revised, week_number, False);
   current_month += 1;
+ return True;
+
+def print_multiple_year(current_year, before, after, time_info, normal_start=True, gregorian=True, revised=False, week_number=False):
+ start_year = current_year - before;
+ end_year = current_year + after;
+ while(True):
+  print_year(start_year, time_info, normal_start, gregorian, revised, week_number);
+  start_year += 1;
+  if(start_year>end_year):
+   break;
  return True;
 
 yearinfo = {
@@ -270,8 +281,9 @@ yearinfo = {
  },
  'monthinfo' : {
   'numberofmonths': 12,
-  'longname': { 0: "January", 1: "February", 2: "March", 3: "April", 4: "May", 5: "June", 6: "July", 7: "August", 8: "September", 9: "October", 10: "November", 11: "December" },
-  'shortname': { 0: "Jan", 1: "Feb", 2: "Mar", 3: "Apr", 4: "May", 5: "Jun", 6: "Jul", 7: "Aug", 8: "Sept", 9: "Oct", 10: "Nov", 11: "Dec" },
+  'longname': { 0: "January", 1: "February", 2: "March", 3: "April", 4: "May", 5: "June", 6: "July", 7: "August", 8: "September", 9: "October", 10: "November", 11: "December", 12: "Test" },
+  'shortname': { 0: "Jan", 1: "Feb", 2: "Mar", 3: "Apr", 4: "May", 5: "Jun", 6: "Jul", 7: "Aug", 8: "Sept", 9: "Oct", 10: "Nov", 11: "Dec", 11: "Tes" },
+  'month_code_list': { 0: 0, 1: 3, 2: 3, 3: 6, 4: 1, 5: 4, 6: 6, 7: 2, 8: 5, 9: 0, 10: 3, 11: 5 },
   'numberofdays': { 
    'normalyear': { 0: 31, 1: 28, 2: 31, 3: 30, 4: 31, 5: 30, 6: 31, 7: 31, 8: 30, 9: 31, 10: 30, 11: 31 },
    'leapyear': { 0: 31, 1: 29, 2: 31, 3: 30, 4: 31, 5: 30, 6: 31, 7: 31, 8: 30, 9: 31, 10: 30, 11: 31 }
@@ -282,7 +294,7 @@ yearinfo = {
 if(__name__ == "__main__"):
  parser = argparse.ArgumentParser(conflict_handler = "resolve", add_help = True);
  parser.add_argument("-y", "--year", type=int, default = date.today().year, help = "enter year");
- parser.add_argument("-m", "--month", type=int, default = (date.today().month-1), help = "enter month or -1 for whole year");
+ parser.add_argument("-m", "--month", type=int, default = date.today().month, help = "enter month or -1 for whole year");
  parser.add_argument("-3", "--three", action="store_true", help = "show num months starting with date's month");
  parser.add_argument("-o", "--monday", action="store_false", help = "start weeks on monday");
  parser.add_argument("-j", "--julian", action="store_false", help = "use the julian calendar");
