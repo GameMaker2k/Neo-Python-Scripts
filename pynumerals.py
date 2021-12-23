@@ -4,15 +4,12 @@
 '''
     This program is free software; you can redistribute it and/or modify
     it under the terms of the Revised BSD License.
-
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     Revised BSD License for more details.
-
     Copyright 2019 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2019 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
-
     $FileInfo: pynumerals.py - Last Update: 12/22/2021 Ver. 0.0.1 RC 1 - Author: kazukisp $
 '''
 
@@ -88,19 +85,19 @@ urdu_to_western = {}
 ucount = 0;
 ucountmax = 10;
 while(ucount<ucountmax):
- urdu_to_western.update( { urdu_arabic[ucount] : western_arabic[ucount] } );
+ urdu_to_western.update( { urdu[ucount] : western_arabic[ucount] } );
  ucount += 1;
 
 urdu_to_eastern = {}
 ucount = 0;
 ucountmax = 10;
 while(ucount<ucountmax):
- urdu_to_eastern.update( { urdu_arabic[ucount] : eastern_arabic[ucount] } );
+ urdu_to_eastern.update( { urdu[ucount] : eastern_arabic[ucount] } );
  ucount += 1;
 
 urdu_to_persian = {}
 ucount = 0;
 ucountmax = 10;
 while(ucount<ucountmax):
- urdu_to_persian.update( { urdu_arabic[ucount] : persian[ucount] } );
+ urdu_to_persian.update( { urdu[ucount] : persian[ucount] } );
  wcount += 1;
