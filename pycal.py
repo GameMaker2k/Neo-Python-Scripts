@@ -72,7 +72,7 @@ def isleapyear(year, gregorian=True, revised=False):
    return isleapyear_julian(year);
  return True;
 
-def get_month_start(current_day, current_month, current_year, time_info, normal_start=True, gregorian=True):
+def get_month_start(current_day, current_month, current_year, time_info, normal_start=True, gregorian=True, newcode=True):
  current_century = (current_year - 1) // 100 + 1;
  current_year_short = abs(current_year) % 100;
  year_code = (current_year_short + (current_year_short / 4)) % 7;
@@ -81,14 +81,18 @@ def get_month_start(current_day, current_month, current_year, time_info, normal_
  century_code_list = [0, 6, 4, 2];
  count_century = 0;
  count_century_list = 0;
- while(count_century<=current_century):
-  if(count_century==current_century):
-   century_code = century_code_list[count_century_list];
-  if(count_century_list>2):
-   count_century_list = 0;
-  else:
-   count_century_list += 1;
-  count_century += 1;
+ if(newcode):
+  count_century_list = current_century % 4;
+  century_code = century_code_list[count_century_list];
+ else:
+  while(count_century<=current_century):
+   if(count_century==current_century):
+    century_code = century_code_list[count_century_list];
+   if(count_century_list>2):
+    count_century_list = 0;
+   else:
+    count_century_list += 1;
+   count_century += 1;
  if(not gregorian):
   century_code = (18 - century_code) % 7;
  if((current_month==0 or current_month==1) and (isleapyear(current_year, True) and gregorian)):
