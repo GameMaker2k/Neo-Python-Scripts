@@ -17,4 +17,9 @@ def digital_root(number):
    number_sum = digital_root(number_sum);
   return number_sum;
  return 0;
- 
+
+def digital_root_alt(number):
+ number = abs(number)
+ while number > 9:
+  number = sum(int(digit) for digit in str(number))
+ return number
