@@ -23,3 +23,11 @@ def digital_root_alt(number):
  while number > 9:
   number = sum(int(digit) for digit in str(number))
  return number
+
+def optimized_digital_root(number):
+ """
+ Calculate the digital root of a number using a more optimized approach.
+ The digital root is obtained by summing the digits of the number until a single digit is left.
+ This function uses a mathematical approach to calculate the digital root directly.
+ """
+ return 1 + (number - 1) % 9 if number != 0 else 0;
