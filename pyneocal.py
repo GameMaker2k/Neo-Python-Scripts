@@ -207,18 +207,6 @@ yearinfo = {
  }
 }
 
-if(__name__ == "__main__"):
- parser = argparse.ArgumentParser(conflict_handler = "resolve", add_help = True);
- parser.add_argument("-y", "--year", type=int, default = date.today().year, help = "enter year");
- parser.add_argument("-m", "--month", type=int, default = date.today().month, help = "enter month or -1 for whole year");
- parser.add_argument("-3", "--three", action="store_true", help = "show num months starting with date's month");
- parser.add_argument("-o", "--monday", action="store_false", help = "start weeks on monday");
- parser.add_argument("-j", "--julian", action="store_false", help = "use the julian calendar");
- parser.add_argument("-r", "--revised", action="store_true", help = "use revised julian calendar");
- parser.add_argument("-w", "--week", action="store_true", help = "show US or ISO-8601 week numbers");
- parser.add_argument("-v", "--version", action = "version", version = __program_name__+" "+__version__);
- getargs = parser.parse_args();
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(conflict_handler="resolve", add_help=True)
     parser.add_argument("-y", "--year", type=int, default=date.today().year, help="Enter year")
@@ -240,4 +228,7 @@ if __name__ == "__main__":
         print_multiple_months(current_month, current_year, 1, 1, yearinfo, getargs.monday, getargs.julian, getargs.revised, getargs.week)
     else:
         print_month(current_month, current_year, yearinfo, getargs.monday, getargs.julian, getargs.revised, getargs.week, True)
-      
+
+        print_multiple_months(current_month, current_year, 1, 1, yearinfo, getargs.monday, getargs.julian, getargs.revised, getargs.week)
+    else:
+        print_month(current_month, current_year, yearinfo, getargs.monday, getargs.julian, getargs.revised, getargs.week, True)
