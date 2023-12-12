@@ -341,8 +341,8 @@ yearinfo = {
  },
  'monthinfo' : {
   'numberofmonths': 12,
-  'longname': { 0: "January", 1: "February", 2: "March", 3: "April", 4: "May", 5: "June", 6: "July", 7: "August", 8: "September", 9: "October", 10: "November", 11: "December", 12: "Test" },
-  'shortname': { 0: "Jan", 1: "Feb", 2: "Mar", 3: "Apr", 4: "May", 5: "Jun", 6: "Jul", 7: "Aug", 8: "Sept", 9: "Oct", 10: "Nov", 11: "Dec", 11: "Tes" },
+  'longname': { 0: "January", 1: "February", 2: "March", 3: "April", 4: "May", 5: "June", 6: "July", 7: "August", 8: "September", 9: "October", 10: "November", 11: "December" },
+  'shortname': { 0: "Jan", 1: "Feb", 2: "Mar", 3: "Apr", 4: "May", 5: "Jun", 6: "Jul", 7: "Aug", 8: "Sept", 9: "Oct", 10: "Nov", 11: "Dec" },
   'month_code_list': { 0: 0, 1: 3, 2: 3, 3: 6, 4: 1, 5: 4, 6: 6, 7: 2, 8: 5, 9: 0, 10: 3, 11: 5 },
   'numberofdays': { 
    'normalyear': { 0: 31, 1: 28, 2: 31, 3: 30, 4: 31, 5: 30, 6: 31, 7: 31, 8: 30, 9: 31, 10: 30, 11: 31 },
