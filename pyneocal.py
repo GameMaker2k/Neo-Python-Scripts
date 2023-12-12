@@ -20,7 +20,7 @@ from __future__ import print_function;
 import sys, argparse;
 from datetime import date;
 
-__program_name__ = "PyCal";
+__program_name__ = "PyNeoCal";
 __project__ = __program_name__;
 __project_url__ = "https://github.com/GameMaker2k/Neo-Python-Scripts";
 __version_info__ = (1, 2, 0, "RC 1", 1);
