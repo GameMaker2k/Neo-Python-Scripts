@@ -40,7 +40,10 @@ class CalendarInfo:
     MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     MONTH_DAYS_NORMAL = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     MONTH_DAYS_LEAP = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
-
+    # Added month code list for Zeller's Congruence or similar algorithm
+    MONTH_CODE_LIST = [0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5]  # January to December
+    CENTURY_CODE_LIST = [6, 4, 2, 0]  # For 17th, 18th, 19th, and 20th centuries
+    
     @staticmethod
     def short_name(names):
         return [name[:3] for name in names]
