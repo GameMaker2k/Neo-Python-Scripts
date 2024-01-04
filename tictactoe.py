@@ -102,6 +102,13 @@ class AdvancedTicTacToe:
             except (ValueError, IndexError):
                 print("Please enter row and column as two numbers separated by a space.")
 
+    def computer_move(self):
+        print(f"Player {self.turn}'s (Computer) turn:")
+        empty_cells = [(i, j) for i in range(self.size) for j in range(self.size) if self.grid[i][j] == " "]
+        x, y = random.choice(empty_cells)
+        self.grid[x][y] = self.turn
+        self.moves_made += 1
+
     def check_winner(self):
         # Check rows and columns
         for i in range(self.size):
