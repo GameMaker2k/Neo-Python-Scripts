@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: iso-8859-15 -*-
+# -*- coding: utf-8 -*-
 
 '''
     This program is free software; you can redistribute it and/or modify
@@ -18,12 +18,17 @@
 
 import os
 
-# Dictionaries for conversion
+# Comprehensive conversion dictionaries for Persian script
 arabic_to_latin = {
     'ا': 'A', 'ب': 'B', 'پ': 'P', 'ت': 'T', 'ث': 'S', 'ج': 'J', 'چ': 'Č', 'ح': 'H', 'خ': 'Kh', 'د': 'D',
-    'ذ': 'Z', 'ر': 'R', 'ز': 'Z', 'ژ': 'Ž', 'س': 'S', 'ش': 'Sh', 'ص': 'S', 'ض': 'Z', 'ط': 'T', 'ظ': 'Z',
+    'ذ': 'Z', 'ر': 'R', 'ز': 'Z', 'ژ': 'Ž', 'س': 'S', 'ش': 'Sh', 'ص': 'Ṣ', 'ض': 'Ẓ', 'ط': 'Ṭ', 'ظ': 'Ẓ',
     'ع': 'ʿ', 'غ': 'Gh', 'ف': 'F', 'ق': 'Q', 'ک': 'K', 'گ': 'G', 'ل': 'L', 'م': 'M', 'ن': 'N', 'و': 'V',
-    'ه': 'H', 'ی': 'Y', 'آ': 'Ā', ' ': ' ', '،': ',', '؟': '?', '؛': ';', '!': '!'
+    'ه': 'H', 'ی': 'Y', 'آ': 'Ā', ' ': ' ', '،': ',', '؟': '?', '؛': ';', '!': '!', '‌': ' ',  # ZWNJ replaced with space
+    'ء': "'", 'ً': 'an', 'َ': 'a', 'ُ': 'u', 'ِ': 'i', 'ّ': '', 'ْ': '', 'ٔ': '', 'ٓ': '',
+    'ئ': 'Y', 'ي': 'Y', 'ك': 'K', 'ى': 'A', '«': '"', '»': '"', '(': '(', ')': ')',
+    '۱': '1', '۲': '2', '۳': '3', '۴': '4', '۵': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9', '۰': '0',
+    '.': '.', ':': ':', '—': '-', '\n': '\n', '\r': '\r', '𐬀': 'a', '𐬌': 'i', '𐬭': 'r',
+    '[': '[', ']': ']', '': '',  # Added brackets
 }
 
 latin_to_arabic = {v: k for k, v in arabic_to_latin.items()}
@@ -32,7 +37,11 @@ latin_to_arabic = {v: k for k, v in arabic_to_latin.items()}
 def arabic_to_latin_script(text):
     result = ''
     for char in text:
-        result += arabic_to_latin.get(char, char)
+        if char in arabic_to_latin:
+            result += arabic_to_latin[char]
+        else:
+            result += char
+            print(f"Unmapped character: {char}")  # Debugging output
     return result
 
 # Function to convert Latin-based script to Arabic script
