@@ -26,7 +26,7 @@ arabic_to_latin_urdu = {
     'و': 'V', 'ہ': 'H', 'ھ': 'H', 'ء': "'", 'ی': 'Y', 'ے': 'E', 'ۓ': 'Ae', 'آ': 'Ā', ' ': ' ', '،': ',', '؟': '?',
     '؛': ';', '!': '!', '‌': ' ',  # ZWNJ replaced with space
     'ً': 'an', 'َ': 'a', 'ُ': 'u', 'ِ': 'i', 'ّ': '', 'ْ': '', 'ٔ': '', 'ٓ': '',
-    'ئ': 'Y', 'ي': 'Y', 'ك': 'K', 'ى': 'A', '«': '"', '»': '"', '(': '(', ')': ')', '۱': '1', '۲': '2', '۳': '3',
+    'ئ': 'Y', 'ي': 'i', 'ك': 'K', 'ى': 'Y', '«': '"', '»': '"', '(': '(', ')': ')', '۱': '1', '۲': '2', '۳': '3',
     '۴': '4', '۵': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9', '۰': '0', '.': '.', ':': ':', '—': '-', 
     '\n': '\n', '\r': '\r', '[': '[', ']': ']'
 }
@@ -37,24 +37,14 @@ latin_to_arabic_urdu = {v: k for k, v in arabic_to_latin_urdu.items()}
 def urdu_to_latin_script(text):
     result = ''
     for char in text:
-        if char in arabic_to_latin_urdu:
-            result += arabic_to_latin_urdu[char]
-        else:
-            result += char
-            print(f"Unmapped character: {char}")  # Debugging output
+        result += arabic_to_latin_urdu.get(char, char)
     return result
 
 # Function to convert Latin-based script to Urdu script
 def latin_to_urdu_script(text):
     result = ''
-    i = 0
-    while i < len(text):
-        if i + 1 < len(text) and text[i:i+2] in latin_to_arabic_urdu:
-            result += latin_to_arabic_urdu[text[i:i+2]]
-            i += 2
-        else:
-            result += latin_to_arabic_urdu.get(text[i], text[i])
-            i += 1
+    for char in text:
+        result += latin_to_arabic_urdu.get(char, char)
     return result
 
 # Function to read text from a file

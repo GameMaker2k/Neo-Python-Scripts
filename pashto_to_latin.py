@@ -16,8 +16,6 @@
     $FileInfo: pashto_to_latin.py - Last Update: 5/31/2024 Ver. 1.0.0 RC 1 - Author: joshuatp $
 '''
 
-import os
-
 # Comprehensive conversion dictionaries for Pashto script
 arabic_to_latin_pashto = {
     'ا': 'A', 'ب': 'B', 'پ': 'P', 'ت': 'T', 'ټ': 'Ṭ', 'ث': 'S', 'ج': 'J', 'ځ': 'Dz', 'چ': 'Č', 'څ': 'Ts',
@@ -27,9 +25,9 @@ arabic_to_latin_pashto = {
     'ې': 'Ē', 'ئ': 'Y', 'ۍ': 'Yi', 'ې': 'Yē', 'ى': 'A', 'آ': 'Ā', ' ': ' ', '،': ',', '؟': '?', '؛': ';',
     '!': '!', '‌': ' ',  # ZWNJ replaced with space
     'ء': "'", 'ً': 'an', 'َ': 'a', 'ُ': 'u', 'ِ': 'i', 'ّ': '', 'ْ': '', 'ٔ': '', 'ٓ': '',
-    'ي': 'Y', 'ك': 'K', '«': '"', '»': '"', '(': '(', ')': ')', '۱': '1', '۲': '2', '۳': '3', '۴': '4',
+    'ي': 'i', 'ك': 'K', '«': '"', '»': '"', '(': '(', ')': ')', '۱': '1', '۲': '2', '۳': '3', '۴': '4',
     '۵': '5', '۶': '6', '۷': '7', '۸': '8', '۹': '9', '۰': '0', '.': '.', ':': ':', '—': '-',
-    '\n': '\n', '\r': '\r', '[': '[', ']': ']'
+    '\n': '\n', '\r': '\r', '[': '[', ']': ']', 'پ': 'P', 'ښ': 'x', 'ش': 'Sh', 'ټ': 'Ṭ', 'څ': 'Ts'
 }
 
 latin_to_arabic_pashto = {v: k for k, v in arabic_to_latin_pashto.items()}
@@ -37,12 +35,14 @@ latin_to_arabic_pashto = {v: k for k, v in arabic_to_latin_pashto.items()}
 # Function to convert Pashto script to Latin-based script
 def pashto_to_latin_script(text):
     result = ''
-    for char in text:
-        if char in arabic_to_latin_pashto:
-            result += arabic_to_latin_pashto[char]
+    i = 0
+    while i < len(text):
+        if i + 1 < len(text) and text[i:i+2] in arabic_to_latin_pashto:
+            result += arabic_to_latin_pashto[text[i:i+2]]
+            i += 2
         else:
-            result += char
-            print(f"Unmapped character: {char}")  # Debugging output
+            result += arabic_to_latin_pashto.get(text[i], text[i])
+            i += 1
     return result
 
 # Function to convert Latin-based script to Pashto script
