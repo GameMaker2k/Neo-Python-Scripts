@@ -13,7 +13,7 @@
     Copyright 2024 Game Maker 2k - https://github.com/GameMaker2k
     Copyright 2024 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
 
-    $FileInfo: farsi_to_latin.py - Last Update: 5/31/2024 Ver. 1.0.0 RC 1 - Author: joshuatp $
+    $FileInfo: urdu_to_latin.py - Last Update: 5/31/2024 Ver. 1.0.0 RC 1 - Author: joshuatp $
 '''
 
 import os
