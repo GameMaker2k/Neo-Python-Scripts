@@ -1,3 +1,21 @@
+#!/usr/bin/env python
+# -*- coding: iso-8859-15 -*-
+
+'''
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the Revised BSD License.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    Revised BSD License for more details.
+
+    Copyright 2024 Game Maker 2k - https://github.com/GameMaker2k
+    Copyright 2024 Kazuki Przyborowski - https://github.com/KazukiPrzyborowski
+
+    $FileInfo: farsi_to_latin.py - Last Update: 5/31/2024 Ver. 1.0.0 RC 1 - Author: joshuatp $
+'''
+
 import os
 
 # Dictionaries for conversion
