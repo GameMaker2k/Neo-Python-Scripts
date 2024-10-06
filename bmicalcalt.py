@@ -19,18 +19,22 @@
 import math
 import argparse
 
+
 def cal_lbs_to_kg(lbs):
     """Convert pounds to kilograms."""
     return lbs * 0.45359237
+
 
 def cal_kg_to_lbs(kg):
     """Convert kilograms to pounds."""
     return kg / 0.45359237
 
+
 def cal_fet_ins_to_cm(fet, ins):
     """Convert feet and inches to centimeters."""
     allins = (fet * 12) + ins
     return allins * 2.54
+
 
 def cal_cm_to_fet_ins(cm):
     """Convert centimeters to feet and inches."""
@@ -39,11 +43,13 @@ def cal_cm_to_fet_ins(cm):
     retins = int(ins % 12)
     return retfet, retins
 
+
 def cal_bmi_imperial(lbs, fet, ins):
     """Calculate BMI using Imperial units."""
     allins = (fet * 12) + ins
     inscalc = allins * allins
     return lbs / inscalc * 703
+
 
 def cal_bmi_metric(kg, cm):
     """Calculate BMI using Metric units."""
@@ -51,11 +57,13 @@ def cal_bmi_metric(kg, cm):
     metcalc = allmet * allmet
     return kg / metcalc
 
+
 def cal_bmi_imperial_alt(lbs, fet, ins):
     """Calculate BMI using Imperial units, but convert to Metric for calculation."""
     kg = cal_lbs_to_kg(lbs)
     cm = cal_fet_ins_to_cm(fet, ins)
     return cal_bmi_metric(kg, cm)
+
 
 def cal_bmi_metric_alt(kg, cm):
     """Calculate BMI using Metric units, but convert to Imperial for calculation."""
@@ -63,13 +71,19 @@ def cal_bmi_metric_alt(kg, cm):
     fet, ins = cal_cm_to_fet_ins(cm)
     return cal_bmi_imperial(lbs, fet, ins)
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-w", "--weight", type=float, required=True, help="Weight in kilograms or pounds")
-    parser.add_argument("-hi", "--height_inches", type=float, help="Height in inches")
-    parser.add_argument("-hf", "--height_feet", type=float, help="Height in feet")
-    parser.add_argument("-hc", "--height_cm", type=float, help="Height in centimeters")
-    parser.add_argument("-s", "--system", choices=["imperial", "metric"], required=True, help="Measurement system to use")
+    parser.add_argument("-w", "--weight", type=float,
+                        required=True, help="Weight in kilograms or pounds")
+    parser.add_argument("-hi", "--height_inches",
+                        type=float, help="Height in inches")
+    parser.add_argument("-hf", "--height_feet",
+                        type=float, help="Height in feet")
+    parser.add_argument("-hc", "--height_cm", type=float,
+                        help="Height in centimeters")
+    parser.add_argument(
+        "-s", "--system", choices=["imperial", "metric"], required=True, help="Measurement system to use")
     args = parser.parse_args()
 
     if args.system == "imperial":

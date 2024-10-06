@@ -26,8 +26,11 @@ __project_url__ = "https://gist.github.com/KazukiPrzyborowski"
 __version_info__ = (1, 0, 0, "RC 1", 1)
 __version_date_info__ = (2019, 3, 18, "RC 1", 1)
 __version_date__ = f"{__version_date_info__[0]}.{str(__version_date_info__[1]).zfill(2)}.{str(__version_date_info__[2]).zfill(2)}"
-__version_date_plusrc__ = __version_date__ if __version_info__[4] is None else f"{__version_date__}-{str(__version_date_info__[4])}"
-__version__ = f"{__version_info__[0]}.{__version_info__[1]}.{__version_info__[2]}" if __version_info__[3] is None else f"{__version_info__[0]}.{__version_info__[1]}.{__version_info__[2]} {str(__version_info__[3])}"
+__version_date_plusrc__ = __version_date__ if __version_info__[
+    4] is None else f"{__version_date__}-{str(__version_date_info__[4])}"
+__version__ = f"{__version_info__[0]}.{__version_info__[1]}.{__version_info__[2]}" if __version_info__[
+    3] is None else f"{__version_info__[0]}.{__version_info__[1]}.{__version_info__[2]} {str(__version_info__[3])}"
+
 
 def get_elf_header(infile):
     """
@@ -65,11 +68,13 @@ def get_elf_header(infile):
 
     return elf_file_info
 
+
 def main():
     """
     Main function to execute the script.
     """
-    parser = argparse.ArgumentParser(description='Read the header of an ELF file.')
+    parser = argparse.ArgumentParser(
+        description='Read the header of an ELF file.')
     parser.add_argument('infile', type=str, help='Path to the ELF file.')
     args = parser.parse_args()
 
@@ -78,6 +83,7 @@ def main():
         print(elf_file_info['e_file_info'])
     else:
         print(f"{args.infile}: Not a ELF File")
+
 
 if __name__ == '__main__':
     main()

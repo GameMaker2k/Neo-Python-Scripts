@@ -16,34 +16,44 @@
     $FileInfo: pycal.py - Last Update: 3/6/2021 Ver. 1.2.0 RC 1 - Author: joshuatp $
 '''
 
-from __future__ import print_function;
-import sys, argparse;
-from datetime import date;
+from __future__ import print_function
+import sys
+import argparse
+from datetime import date
 
-__program_name__ = "PyNeoCal";
-__project__ = __program_name__;
-__project_url__ = "https://github.com/GameMaker2k/Neo-Python-Scripts";
-__version_info__ = (1, 2, 0, "RC 1", 1);
-__version_date_info__ = (2019, 3, 6, "RC 1", 1);
-__version_date__ = str(__version_date_info__[0])+"."+str(__version_date_info__[1]).zfill(2)+"."+str(__version_date_info__[2]).zfill(2);
-if(__version_info__[4]!=None):
- __version_date_plusrc__ = __version_date__+"-"+str(__version_date_info__[4]);
-if(__version_info__[4]==None):
- __version_date_plusrc__ = __version_date__;
-if(__version_info__[3]!=None):
- __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2])+" "+str(__version_info__[3]);
-if(__version_info__[3]==None):
- __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2]);
+__program_name__ = "PyNeoCal"
+__project__ = __program_name__
+__project_url__ = "https://github.com/GameMaker2k/Neo-Python-Scripts"
+__version_info__ = (1, 2, 0, "RC 1", 1)
+__version_date_info__ = (2019, 3, 6, "RC 1", 1)
+__version_date__ = str(__version_date_info__[0])+"."+str(__version_date_info__[
+    1]).zfill(2)+"."+str(__version_date_info__[2]).zfill(2)
+if(__version_info__[4] != None):
+    __version_date_plusrc__ = __version_date__ + \
+        "-"+str(__version_date_info__[4])
+if(__version_info__[4] == None):
+    __version_date_plusrc__ = __version_date__
+if(__version_info__[3] != None):
+    __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(
+        __version_info__[2])+" "+str(__version_info__[3])
+if(__version_info__[3] == None):
+    __version__ = str(
+        __version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2])
+
 
 class CalendarInfo:
-    DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-    MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    DAYS = ["Sunday", "Monday", "Tuesday",
+            "Wednesday", "Thursday", "Friday", "Saturday"]
+    MONTHS = ["January", "February", "March", "April", "May", "June",
+              "July", "August", "September", "October", "November", "December"]
     MONTH_DAYS_NORMAL = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     MONTH_DAYS_LEAP = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     # Added month code list for Zeller's Congruence or similar algorithm
-    MONTH_CODE_LIST = [0, 3, 3, 6, 1, 4, 6, 2, 5, 0, 3, 5]  # January to December
-    CENTURY_CODE_LIST = [6, 4, 2, 0]  # For 17th, 18th, 19th, and 20th centuries
-    
+    MONTH_CODE_LIST = [0, 3, 3, 6, 1, 4, 6,
+                       2, 5, 0, 3, 5]  # January to December
+    # For 17th, 18th, 19th, and 20th centuries
+    CENTURY_CODE_LIST = [6, 4, 2, 0]
+
     @staticmethod
     def short_name(names):
         return [name[:3] for name in names]
@@ -76,6 +86,7 @@ class CalendarInfo:
         else:
             raise ValueError(f"Unknown calendar system: {calendar}")
 
+
 def get_month_start(current_day, current_month, current_year, normal_start=True, calendar='gregorian'):
     current_century = (current_year - 1) // 100 + 1
     current_year_short = abs(current_year) % 100
@@ -95,7 +106,8 @@ def get_month_start(current_day, current_month, current_year, normal_start=True,
     is_leap = CalendarInfo.is_leap_year(current_year, calendar)
     leap_year_adjustment = 1 if (current_month < 2 and is_leap) else 0
 
-    ret_val = (year_code + month_code + century_code + current_day - leap_year_adjustment) % 7
+    ret_val = (year_code + month_code + century_code +
+               current_day - leap_year_adjustment) % 7
 
     # Adjust for week start
     if not normal_start and ret_val > 0:
@@ -104,6 +116,7 @@ def get_month_start(current_day, current_month, current_year, normal_start=True,
         ret_val = 6
 
     return ret_val
+
 
 def count_number_of_days(current_month, current_year, calendar='gregorian'):
     # Determine if the year is a leap year
@@ -116,6 +129,7 @@ def count_number_of_days(current_month, current_year, calendar='gregorian'):
     daycount = sum(month_days[current_month:])
 
     return daycount
+
 
 def get_week_number(current_date, current_month, current_year, normal_start=True, calendar='gregorian'):
     # Determine if the year is a leap year
@@ -136,6 +150,7 @@ def get_week_number(current_date, current_month, current_year, normal_start=True
 
     return week_number
 
+
 def print_month(current_month, current_year, normal_start=True, calendar='gregorian', week_number=False, print_year=False):
     is_leap = CalendarInfo.is_leap_year(current_year, calendar)
     month_days = CalendarInfo.MONTH_DAYS_LEAP if is_leap else CalendarInfo.MONTH_DAYS_NORMAL
@@ -146,11 +161,13 @@ def print_month(current_month, current_year, normal_start=True, calendar='gregor
     print(header.center(26 if week_number else 20))
 
     # Weekday names
-    day_names = CalendarInfo.short_name(CalendarInfo.DAYS if normal_start else CalendarInfo.DAYS[1:] + [CalendarInfo.DAYS[0]])
+    day_names = CalendarInfo.short_name(
+        CalendarInfo.DAYS if normal_start else CalendarInfo.DAYS[1:] + [CalendarInfo.DAYS[0]])
     print(" ".join(day_names).center(26 if week_number else 20))
 
     # Calculate starting position of the first day of the month
-    month_start = get_month_start(1, current_month, current_year, normal_start, calendar)
+    month_start = get_month_start(
+        1, current_month, current_year, normal_start, calendar)
 
     # Print the calendar days
     day_of_week = 0
@@ -170,6 +187,7 @@ def print_month(current_month, current_year, normal_start=True, calendar='gregor
             else:
                 print()
 
+
 def print_multiple_months(current_month, current_year, before, after, normal_start=True, gregorian=True, week_number=False):
     start_month = (current_month - before) % 12
     start_year = current_year + ((current_month - before) // 12)
@@ -177,12 +195,14 @@ def print_multiple_months(current_month, current_year, before, after, normal_sta
     end_year = current_year + ((current_month + after) // 12)
 
     while True:
-        print_month(start_month, start_year, normal_start, gregorian, week_number, print_year=True)
+        print_month(start_month, start_year, normal_start,
+                    gregorian, week_number, print_year=True)
         start_month = (start_month + 1) % 12
         if start_month == 0:
             start_year += 1
         if (start_month > end_month and start_year == end_year) or (start_year > end_year):
             break
+
 
 def print_year(current_year, normal_start=True, calendar='gregorian', week_number=False):
     if current_year < 0:
@@ -191,7 +211,9 @@ def print_year(current_year, normal_start=True, calendar='gregorian', week_numbe
     print(str(current_year).center(20))
 
     for current_month in range(12):  # Assuming 12 months in a year
-        print_month(current_month, current_year, normal_start, calendar, week_number, False)
+        print_month(current_month, current_year, normal_start,
+                    calendar, week_number, False)
+
 
 def print_multiple_year(current_year, before, after, normal_start=True, calendar='gregorian', week_number=False):
     start_year = current_year - before
@@ -200,15 +222,23 @@ def print_multiple_year(current_year, before, after, normal_start=True, calendar
     for year in range(start_year, end_year + 1):
         print_year(year, normal_start, calendar, week_number)
 
+
 def main():
     parser = argparse.ArgumentParser(description="Calendar Display Tool")
-    parser.add_argument("-y", "--year", type=int, default=date.today().year, help="Enter year (default: current year)")
-    parser.add_argument("-m", "--month", type=int, default=date.today().month, help="Enter month (1-12) or -1 for the whole year")
-    parser.add_argument("-t", "--three", action="store_true", help="Show three months starting from the specified month")
-    parser.add_argument("-o", "--monday", action="store_true", help="Start weeks on Monday")
-    parser.add_argument("-j", "--julian", action="store_true", help="Use the Julian calendar")
-    parser.add_argument("-r", "--revised", action="store_true", help="Use the Revised Julian calendar")
-    parser.add_argument("-w", "--week", action="store_true", help="Show week numbers")
+    parser.add_argument("-y", "--year", type=int, default=date.today().year,
+                        help="Enter year (default: current year)")
+    parser.add_argument("-m", "--month", type=int, default=date.today().month,
+                        help="Enter month (1-12) or -1 for the whole year")
+    parser.add_argument("-t", "--three", action="store_true",
+                        help="Show three months starting from the specified month")
+    parser.add_argument("-o", "--monday", action="store_true",
+                        help="Start weeks on Monday")
+    parser.add_argument("-j", "--julian", action="store_true",
+                        help="Use the Julian calendar")
+    parser.add_argument("-r", "--revised", action="store_true",
+                        help="Use the Revised Julian calendar")
+    parser.add_argument("-w", "--week", action="store_true",
+                        help="Show week numbers")
     args = parser.parse_args()
 
     # Adjust the calendar and week start settings
@@ -218,9 +248,12 @@ def main():
     if args.month == -1:
         print_year(args.year, normal_start, calendar, args.week)
     elif args.three:
-        print_multiple_months(args.month - 1, args.year, 1, 1, normal_start, calendar, args.week)
+        print_multiple_months(args.month - 1, args.year,
+                              1, 1, normal_start, calendar, args.week)
     else:
-        print_month(args.month - 1, args.year, normal_start, calendar, args.week, True)
+        print_month(args.month - 1, args.year,
+                    normal_start, calendar, args.week, True)
+
 
 if __name__ == "__main__":
     main()

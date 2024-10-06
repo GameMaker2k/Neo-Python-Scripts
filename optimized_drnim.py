@@ -2,7 +2,7 @@
 def play_nim(player_first=True, total_coins=12):
     """
     Play a round of Nim.
-    
+
     :param player_first: Boolean, True if the player goes first, False otherwise.
     :param total_coins: Integer, total number of coins in the game.
     :return: Boolean, True if player wins, False if Dr. Nim wins.
@@ -10,7 +10,7 @@ def play_nim(player_first=True, total_coins=12):
     def nim_move(coins):
         """
         Calculate Dr. Nim's move.
-        
+
         :param coins: Integer, current number of coins.
         :return: Integer, number of coins Dr. Nim will take.
         """
@@ -19,7 +19,7 @@ def play_nim(player_first=True, total_coins=12):
     def player_move(coins, player_choice):
         """
         Process player's move.
-        
+
         :param coins: Integer, current number of coins.
         :param player_choice: Integer, number of coins the player chooses to take.
         :return: Integer, remaining number of coins.
@@ -39,6 +39,7 @@ def play_nim(player_first=True, total_coins=12):
 
         if coins <= 0:
             return not player_first
+
 
 # Running multiple rounds and tracking wins and losses
 player_wins = 0

@@ -15,26 +15,32 @@
     $FileInfo: pyeleccalc.py - Last Update: 02/02/2016 Ver. 0.0.1 RC 2 - Author: joshuatp $
 '''
 
+
 def GetWattsDC(amps, volts):
- watts = float(float(amps) * float(volts));
- return float(watts);
+    watts = float(float(amps) * float(volts))
+    return float(watts)
+
 
 def GetWattageDC(amps, volts):
- watts = float(float(amps) * float(volts));
- return float(watts);
+    watts = float(float(amps) * float(volts))
+    return float(watts)
+
 
 def GetAmpsDC(watts, volts):
- amps = float(float(watts) / float(volts));
- return float(amps);
+    amps = float(float(watts) / float(volts))
+    return float(amps)
+
 
 def GetAmperageDC(watts, volts):
- amps = float(float(watts) / float(volts));
- return float(amps);
+    amps = float(float(watts) / float(volts))
+    return float(amps)
+
 
 def GetVoltsDC(watts, amps):
- volts = float(float(watts) / float(amps));
- return float(volts);
+    volts = float(float(watts) / float(amps))
+    return float(volts)
+
 
 def GetVoltageDC(watts, amps):
- volts = float(float(watts) / float(amps));
- return float(volts);
+    volts = float(float(watts) / float(amps))
+    return float(volts)

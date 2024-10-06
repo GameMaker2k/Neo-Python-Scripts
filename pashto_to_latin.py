@@ -33,6 +33,8 @@ arabic_to_latin_pashto = {
 latin_to_arabic_pashto = {v: k for k, v in arabic_to_latin_pashto.items()}
 
 # Function to convert Pashto script to Latin-based script
+
+
 def pashto_to_latin_script(text):
     result = ''
     i = 0
@@ -46,6 +48,8 @@ def pashto_to_latin_script(text):
     return result
 
 # Function to convert Latin-based script to Pashto script
+
+
 def latin_to_pashto_script(text):
     result = ''
     i = 0
@@ -59,6 +63,8 @@ def latin_to_pashto_script(text):
     return result
 
 # Function to read text from a file
+
+
 def read_text_file(file_path):
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"The file {file_path} does not exist.")
@@ -66,28 +72,38 @@ def read_text_file(file_path):
         return file.read()
 
 # Function to write text to a file
+
+
 def write_text_file(file_path, text):
     with open(file_path, 'w', encoding='utf-8') as file:
         file.write(text)
 
 # Function to convert a file from Pashto script to Latin-based script and save it to another file
+
+
 def convert_pashto_file_to_latin(input_file_path, output_file_path):
     pashto_text = read_text_file(input_file_path)
     latin_text = pashto_to_latin_script(pashto_text)
     write_text_file(output_file_path, latin_text)
 
 # Function to convert a file from Latin-based script to Pashto script and save it to another file
+
+
 def convert_latin_file_to_pashto(input_file_path, output_file_path):
     latin_text = read_text_file(input_file_path)
     pashto_text = latin_to_pashto_script(latin_text)
     write_text_file(output_file_path, pashto_text)
 
 # Function to convert a file from Pashto script to Latin-based script and return the result as a variable
+
+
 def convert_pashto_file_to_latin_variable(input_file_path):
     pashto_text = read_text_file(input_file_path)
     return pashto_to_latin_script(pashto_text)
 
 # Function to convert a file from Latin-based script to Pashto script and return the result as a variable
+
+
 def convert_latin_file_to_pashto_variable(input_file_path):
     latin_text = read_text_file(input_file_path)
     return latin_to_pashto_script(latin_text)
