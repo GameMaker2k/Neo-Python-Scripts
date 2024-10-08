@@ -67,7 +67,8 @@ def write_text_file(file_path, text):
     with open(file_path, 'w', encoding='utf-8') as file:
         file.write(text)
 
-# Function to convert a file from Urdu script to Latin-based script and save it to another file
+# Function to convert a file from Urdu script to Latin-based script and
+# save it to another file
 
 
 def convert_urdu_file_to_latin(input_file_path, output_file_path):
@@ -75,7 +76,8 @@ def convert_urdu_file_to_latin(input_file_path, output_file_path):
     latin_text = urdu_to_latin_script(urdu_text)
     write_text_file(output_file_path, latin_text)
 
-# Function to convert a file from Latin-based script to Urdu script and save it to another file
+# Function to convert a file from Latin-based script to Urdu script and
+# save it to another file
 
 
 def convert_latin_file_to_urdu(input_file_path, output_file_path):
@@ -83,14 +85,16 @@ def convert_latin_file_to_urdu(input_file_path, output_file_path):
     urdu_text = latin_to_urdu_script(latin_text)
     write_text_file(output_file_path, urdu_text)
 
-# Function to convert a file from Urdu script to Latin-based script and return the result as a variable
+# Function to convert a file from Urdu script to Latin-based script and
+# return the result as a variable
 
 
 def convert_urdu_file_to_latin_variable(input_file_path):
     urdu_text = read_text_file(input_file_path)
     return urdu_to_latin_script(urdu_text)
 
-# Function to convert a file from Latin-based script to Urdu script and return the result as a variable
+# Function to convert a file from Latin-based script to Urdu script and
+# return the result as a variable
 
 
 def convert_latin_file_to_urdu_variable(input_file_path):

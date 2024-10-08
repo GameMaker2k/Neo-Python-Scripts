@@ -12,10 +12,11 @@
     $FileInfo: time-server.py - Last Update: 3/16/2016 Ver. 0.0.1 RC 1  - Author: cooldude2k $
 '''
 
-import cherrypy
 import argparse
-import time
 import datetime
+import time
+
+import cherrypy
 
 parser = argparse.ArgumentParser(description="Test Time Server.")
 parser.add_argument("--ver", "--version", action="version",
@@ -36,37 +37,40 @@ parser.add_argument("--errorlog", "--errorlog-file",
                     help="location to store error log file.")
 parser.add_argument("--timeout", "--response-timeout", default=6000,
                     help="the number of seconds to allow responses to run.")
-parser.add_argument("--environment", "--server-environment", default="production",
-                    help="The server.environment entry controls how CherryPy should run.")
+parser.add_argument(
+    "--environment",
+    "--server-environment",
+    default="production",
+    help="The server.environment entry controls how CherryPy should run.")
 getargs = parser.parse_args()
 
-if(getargs.port is not None):
+if (getargs.port is not None):
     port = int(getargs.port)
 else:
     port = 4123
-if(getargs.host is not None):
+if (getargs.host is not None):
     host = str(getargs.host)
 else:
     host = "127.0.0.1"
-if(getargs.timeout is not None):
+if (getargs.timeout is not None):
     timeout = int(getargs.timeout)
 else:
     timeout = 6000
-if(getargs.accesslog is not None):
+if (getargs.accesslog is not None):
     accesslog = str(getargs.accesslog)
 else:
     accesslog = "./access.log"
-if(getargs.errorlog is not None):
+if (getargs.errorlog is not None):
     errorlog = str(getargs.errorlog)
 else:
     errorlog = "./errors.log"
-if(getargs.environment is not None):
+if (getargs.environment is not None):
     serv_environ = str(getargs.environment)
 else:
     serv_environ = "production"
 pro_app_name = "Test Time Server"
 pro_app_version = "0.0.1"
-pro_app_subname = " "+pro_app_version
+pro_app_subname = " " + pro_app_version
 
 
 class GenerateIndexPage(object):
@@ -81,13 +85,14 @@ class GenerateIndexPage(object):
         utc_ts_ms = utc_now.microsecond
         ts_ms_str = str(ts_ms).ljust(6, "0")
         utc_ts_ms_str = str(utc_ts_ms).ljust(6, "0")
-        ts_full_str = ts_str+"."+ts_ms_str
-        utc_ts_full_str = utc_ts_str+"."+utc_ts_ms_str
+        ts_full_str = ts_str + "." + ts_ms_str
+        utc_ts_full_str = utc_ts_str + "." + utc_ts_ms_str
         cherrypy.response.headers['Content-Type'] = 'text/html; charset=UTF-8'
         cherrypy.response.headers['Datetime-Timestamp'] = utc_ts_str
         cherrypy.response.headers['Datetime-Microseconds'] = utc_ts_ms_str
         cherrypy.response.headers['Datetime-Timestampfull'] = utc_ts_full_str
-        return "<!DOCTYPE html>\n<html lang=\"en\">\n    <head>\n        <meta charset=\"utf-8\">\n        <title>"+pro_app_name+pro_app_subname+"</title>\n    </head>\n    <body>\n        <h1>"+pro_app_name+pro_app_subname+"</h1>\n        <h6>\n            Timestamp: "+utc_ts_str+"<br />\n            Microseconds: "+utc_ts_ms_str+"<br />\n            Timestampfull: "+utc_ts_full_str+"<br />\n        </h6>\n        <p>\n            <a href=\"/csv/\">CSV</a>\n            <a href=\"/txt/\">TXT</a>\n            <a href=\"/xml/\">XML</a>\n            <a href=\"/json/\">JSON</a>\n            <a href=\"/text/\">TEXT</a>\n            <a href=\"/yaml/\">YAML</a>\n        </p>\n    </body>\n</html>\n"
+        return "<!DOCTYPE html>\n<html lang=\"en\">\n    <head>\n        <meta charset=\"utf-8\">\n        <title>" + pro_app_name + pro_app_subname + "</title>\n    </head>\n    <body>\n        <h1>" + pro_app_name + pro_app_subname + "</h1>\n        <h6>\n            Timestamp: " + utc_ts_str + "<br />\n            Microseconds: " + utc_ts_ms_str + \
+            "<br />\n            Timestampfull: " + utc_ts_full_str + "<br />\n        </h6>\n        <p>\n            <a href=\"/csv/\">CSV</a>\n            <a href=\"/txt/\">TXT</a>\n            <a href=\"/xml/\">XML</a>\n            <a href=\"/json/\">JSON</a>\n            <a href=\"/text/\">TEXT</a>\n            <a href=\"/yaml/\">YAML</a>\n        </p>\n    </body>\n</html>\n"
     index.exposed = True
 
 
@@ -103,13 +108,14 @@ class GenerateCSVPage(object):
         utc_ts_ms = utc_now.microsecond
         ts_ms_str = str(ts_ms).ljust(6, "0")
         utc_ts_ms_str = str(utc_ts_ms).ljust(6, "0")
-        ts_full_str = ts_str+"."+ts_ms_str
-        utc_ts_full_str = utc_ts_str+"."+utc_ts_ms_str
+        ts_full_str = ts_str + "." + ts_ms_str
+        utc_ts_full_str = utc_ts_str + "." + utc_ts_ms_str
         cherrypy.response.headers['Content-Type'] = 'application/json; charset=UTF-8'
         cherrypy.response.headers['Datetime-Timestamp'] = utc_ts_str
         cherrypy.response.headers['Datetime-Microseconds'] = utc_ts_ms_str
         cherrypy.response.headers['Datetime-Timestampfull'] = utc_ts_full_str
-        return "timestamp,microseconds,timestampfull\n"+utc_ts_str+","+utc_ts_ms_str+","+utc_ts_full_str+"\n"
+        return "timestamp,microseconds,timestampfull\n" + utc_ts_str + \
+            "," + utc_ts_ms_str + "," + utc_ts_full_str + "\n"
     index.exposed = True
 
 
@@ -125,13 +131,13 @@ class GenerateTXTPage(object):
         utc_ts_ms = utc_now.microsecond
         ts_ms_str = str(ts_ms).ljust(6, "0")
         utc_ts_ms_str = str(utc_ts_ms).ljust(6, "0")
-        ts_full_str = ts_str+"."+ts_ms_str
-        utc_ts_full_str = utc_ts_str+"."+utc_ts_ms_str
+        ts_full_str = ts_str + "." + ts_ms_str
+        utc_ts_full_str = utc_ts_str + "." + utc_ts_ms_str
         cherrypy.response.headers['Content-Type'] = 'text/plain; charset=UTF-8'
         cherrypy.response.headers['Datetime-Timestamp'] = utc_ts_str
         cherrypy.response.headers['Datetime-Microseconds'] = utc_ts_ms_str
         cherrypy.response.headers['Datetime-Timestampfull'] = utc_ts_full_str
-        return ""+utc_ts_str+"\n"+utc_ts_ms_str+"\n"+utc_ts_full_str+"\n"
+        return "" + utc_ts_str + "\n" + utc_ts_ms_str + "\n" + utc_ts_full_str + "\n"
     index.exposed = True
 
 
@@ -147,13 +153,14 @@ class GenerateXMLPage(object):
         utc_ts_ms = utc_now.microsecond
         ts_ms_str = str(ts_ms).ljust(6, "0")
         utc_ts_ms_str = str(utc_ts_ms).ljust(6, "0")
-        ts_full_str = ts_str+"."+ts_ms_str
-        utc_ts_full_str = utc_ts_str+"."+utc_ts_ms_str
+        ts_full_str = ts_str + "." + ts_ms_str
+        utc_ts_full_str = utc_ts_str + "." + utc_ts_ms_str
         cherrypy.response.headers['Content-Type'] = 'application/xml; charset=UTF-8'
         cherrypy.response.headers['Datetime-Timestamp'] = utc_ts_str
         cherrypy.response.headers['Datetime-Microseconds'] = utc_ts_ms_str
         cherrypy.response.headers['Datetime-Timestampfull'] = utc_ts_full_str
-        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<datetime>\n <time timestamp=\""+utc_ts_str+"\" microseconds=\""+utc_ts_ms_str+"\" timestampfull=\""+utc_ts_full_str+"\" />\n</datetime>\n"
+        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<datetime>\n <time timestamp=\"" + utc_ts_str + \
+            "\" microseconds=\"" + utc_ts_ms_str + "\" timestampfull=\"" + utc_ts_full_str + "\" />\n</datetime>\n"
     index.exposed = True
 
 
@@ -169,13 +176,14 @@ class GenerateJSONPage(object):
         utc_ts_ms = utc_now.microsecond
         ts_ms_str = str(ts_ms).ljust(6, "0")
         utc_ts_ms_str = str(utc_ts_ms).ljust(6, "0")
-        ts_full_str = ts_str+"."+ts_ms_str
-        utc_ts_full_str = utc_ts_str+"."+utc_ts_ms_str
+        ts_full_str = ts_str + "." + ts_ms_str
+        utc_ts_full_str = utc_ts_str + "." + utc_ts_ms_str
         cherrypy.response.headers['Content-Type'] = 'text/csv; charset=UTF-8'
         cherrypy.response.headers['Datetime-Timestamp'] = utc_ts_str
         cherrypy.response.headers['Datetime-Microseconds'] = utc_ts_ms_str
         cherrypy.response.headers['Datetime-Timestampfull'] = utc_ts_full_str
-        return "{\n  \"datetime\": {\n    \"time\": {\n      \"-timestamp\": \""+utc_ts_str+"\",\n      \"-microseconds\": \""+utc_ts_ms_str+"\",\n      \"-timestampfull\": \""+utc_ts_full_str+"\"\n    }\n  }\n}\n"
+        return "{\n  \"datetime\": {\n    \"time\": {\n      \"-timestamp\": \"" + utc_ts_str + "\",\n      \"-microseconds\": \"" + \
+            utc_ts_ms_str + "\",\n      \"-timestampfull\": \"" + utc_ts_full_str + "\"\n    }\n  }\n}\n"
     index.exposed = True
 
 
@@ -191,13 +199,13 @@ class GenerateTEXTPage(object):
         utc_ts_ms = utc_now.microsecond
         ts_ms_str = str(ts_ms).ljust(6, "0")
         utc_ts_ms_str = str(utc_ts_ms).ljust(6, "0")
-        ts_full_str = ts_str+"."+ts_ms_str
-        utc_ts_full_str = utc_ts_str+"."+utc_ts_ms_str
+        ts_full_str = ts_str + "." + ts_ms_str
+        utc_ts_full_str = utc_ts_str + "." + utc_ts_ms_str
         cherrypy.response.headers['Content-Type'] = 'text/plain; charset=UTF-8'
         cherrypy.response.headers['Datetime-Timestamp'] = utc_ts_str
         cherrypy.response.headers['Datetime-Microseconds'] = utc_ts_ms_str
         cherrypy.response.headers['Datetime-Timestampfull'] = utc_ts_full_str
-        return ""+utc_ts_str+"\n"+utc_ts_ms_str+"\n"+utc_ts_full_str+"\n"
+        return "" + utc_ts_str + "\n" + utc_ts_ms_str + "\n" + utc_ts_full_str + "\n"
     index.exposed = True
 
 
@@ -213,13 +221,14 @@ class GenerateYAMLPage(object):
         utc_ts_ms = utc_now.microsecond
         ts_ms_str = str(ts_ms).ljust(6, "0")
         utc_ts_ms_str = str(utc_ts_ms).ljust(6, "0")
-        ts_full_str = ts_str+"."+ts_ms_str
-        utc_ts_full_str = utc_ts_str+"."+utc_ts_ms_str
+        ts_full_str = ts_str + "." + ts_ms_str
+        utc_ts_full_str = utc_ts_str + "." + utc_ts_ms_str
         cherrypy.response.headers['Content-Type'] = 'application/json; charset=UTF-8'
         cherrypy.response.headers['Datetime-Timestamp'] = utc_ts_str
         cherrypy.response.headers['Datetime-Microseconds'] = utc_ts_ms_str
         cherrypy.response.headers['Datetime-Timestampfull'] = utc_ts_full_str
-        return "---\n  datetime: \n    time: \n      -timestamp: \""+utc_ts_str+"\"\n      -microseconds: \""+utc_ts_ms_str+"\"\n      -timestampfull: \""+utc_ts_full_str+"\"\n"
+        return "---\n  datetime: \n    time: \n      -timestamp: \"" + utc_ts_str + \
+            "\"\n      -microseconds: \"" + utc_ts_ms_str + "\"\n      -timestampfull: \"" + utc_ts_full_str + "\"\n"
     index.exposed = True
 
 

@@ -34,20 +34,28 @@ class TicTacToe:
 
     def check_winner(self, x, y, piece):
         # Check the row and column of the last move for a win
-        if all(self.grid[x][j] == piece for j in range(self.size)) or all(self.grid[i][y] == piece for i in range(self.size)):
+        if all(
+            self.grid[x][j] == piece for j in range(
+                self.size)) or all(
+            self.grid[i][y] == piece for i in range(
+                self.size)):
             return True
         # Check diagonals only if x and y are on a diagonal
         # Check the main diagonal
         if x == y and all(self.grid[i][i] == piece for i in range(self.size)):
             return True
         # Check the anti-diagonal
-        if x + y == self.size - 1 and all(self.grid[i][self.size-i-1] == piece for i in range(self.size)):
+        if x + y == self.size - \
+                1 and all(self.grid[i][self.size - i - 1] == piece for i in range(self.size)):
             return True
         return False
 
     def check_draw(self):
         # Check if all cells are filled
-        return all(self.grid[i][j] != " " for i in range(self.size) for j in range(self.size))
+        return all(
+            self.grid[i][j] != " " for i in range(
+                self.size) for j in range(
+                self.size))
 
     def reset_game(self):
        # Resets the game to the initial state
@@ -99,8 +107,10 @@ class AdvancedTicTacToe:
         valid_move = False
         while not valid_move:
             try:
-                x, y = map(int, input(
-                    f"Player {self.turn}, enter your move as 'row col': ").split())
+                x, y = map(
+                    int, input(
+                        f"Player {
+                            self.turn}, enter your move as 'row col': ").split())
                 if 0 <= x < self.size and 0 <= y < self.size and self.grid[x][y] == " ":
                     self.grid[x][y] = self.turn
                     self.moves_made += 1
@@ -121,10 +131,12 @@ class AdvancedTicTacToe:
     def check_winner(self):
         # Check rows and columns
         for i in range(self.size):
-            if all(self.grid[i][j] == self.turn for j in range(self.size)) or all(self.grid[j][i] == self.turn for j in range(self.size)):
+            if all(self.grid[i][j] == self.turn for j in range(self.size)) or all(
+                    self.grid[j][i] == self.turn for j in range(self.size)):
                 return True
         # Check diagonals
-        if all(self.grid[i][i] == self.turn for i in range(self.size)) or all(self.grid[i][self.size-i-1] == self.turn for i in range(self.size)):
+        if all(self.grid[i][i] == self.turn for i in range(self.size)) or all(
+                self.grid[i][self.size - i - 1] == self.turn for i in range(self.size)):
             return True
         return False
 

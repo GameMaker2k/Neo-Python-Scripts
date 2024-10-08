@@ -9,7 +9,7 @@ class FileLikeObject:
     def read(self, size=-1):
         if size == -1:
             size = len(self.content) - self.position
-        data = self.content[self.position:self.position+size]
+        data = self.content[self.position:self.position + size]
         self.position += size
         return data
 

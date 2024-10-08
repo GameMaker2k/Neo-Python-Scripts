@@ -1,16 +1,18 @@
 #!/usr/bin/env python
 
-from __future__ import division, absolute_import, print_function
-import re
+from __future__ import absolute_import, division, print_function
+
+import cgi
+import gzip
 import os
+import re
 import sys
 import urllib
-import urllib2
+
 import cookielib
 import StringIO
-import gzip
+import urllib2
 import urlparse
-import cgi
 
 
 def add_url_param(url, **params):
@@ -39,7 +41,7 @@ def listize(varlist):
     newlistreg = {}
     newlistrev = {}
     newlistfull = {}
-    while(il < ix):
+    while (il < ix):
         newlistreg.update({ilx: varlist[il]})
         newlistrev.update({varlist[il]: ilx})
         ilx = ilx + 1
@@ -58,7 +60,7 @@ def twolistize(varlist):
     newlistdescreg = {}
     newlistdescrev = {}
     newlistfull = {}
-    while(il < ix):
+    while (il < ix):
         newlistnamereg.update({ilx: varlist[il][0].strip()})
         newlistnamerev.update({varlist[il][0].strip(): ilx})
         newlistdescreg.update({ilx: varlist[il][1].strip()})
@@ -79,7 +81,7 @@ def arglistize(proexec, *varlist):
     ix = len(varlist)
     ilx = 1
     newarglist = [proexec]
-    while(il < ix):
+    while (il < ix):
         if varlist[il][0] is not None:
             newarglist.append(varlist[il][0])
         if varlist[il][1] is not None:
@@ -93,10 +95,12 @@ def download_from_url(httpurl, httpheaders, httpcookie):
         urllib2.HTTPCookieProcessor(httpcookie))
     geturls_opener.addheaders = httpheaders
     geturls_text = geturls_opener.open(httpurl)
-    if(geturls_text.info().get("Content-Encoding") == "gzip" or geturls_text.info().get("Content-Encoding") == "deflate"):
+    if (geturls_text.info().get("Content-Encoding") ==
+            "gzip" or geturls_text.info().get("Content-Encoding") == "deflate"):
         strbuf = StringIO.StringIO(geturls_text.read())
         gzstrbuf = gzip.GzipFile(fileobj=strbuf)
         out_text = gzstrbuf.read()[:]
-    if(geturls_text.info().get("Content-Encoding") != "gzip" and geturls_text.info().get("Content-Encoding") != "deflate"):
+    if (geturls_text.info().get("Content-Encoding") !=
+            "gzip" and geturls_text.info().get("Content-Encoding") != "deflate"):
         out_text = geturls_text.read()[:]
     return out_text

@@ -15,5 +15,5 @@ def get_info(invar):
         inprempath = invar.__module__
     inprempath = globals()[inprempath]
     inmpath = getattr(inprempath, "__file__")
-    outstr = "<"+intype+" '"+inname+"' from '"+inmpath+"'>"
+    outstr = "<" + intype + " '" + inname + "' from '" + inmpath + "'>"
     return outstr

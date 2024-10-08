@@ -33,14 +33,72 @@ arabic_to_latin_farsi = {
 
 # Ensuring correct round-trip conversion
 latin_to_arabic_farsi = {
-    'A': 'ا', 'B': 'ب', 'P': 'پ', 'T': 'ت', 'S': 'ث', 'J': 'ج', 'Č': 'چ', 'H': 'ح', 'Kh': 'خ', 'D': 'د',
-    'Z': 'ز', 'R': 'ر', 'Ž': 'ژ', 'Sh': 'ش', 'Ṣ': 'ص', 'Ẓ': 'ض', 'Ṭ': 'ط', 'Ẓ': 'ظ', 'ʿ': 'ع', 'Gh': 'غ',
-    'F': 'ف', 'Q': 'ق', 'K': 'ک', 'G': 'گ', 'L': 'ل', 'M': 'م', 'N': 'ن', 'V': 'و', 'Y': 'ی', 'Ā': 'آ',
-    'i': 'ي', ' ': ' ', ',': '،', '?': '؟', ';': '؛', '!': '!', ' ': '‌', "'": 'ء', 'an': 'ً', 'a': 'َ',
-    'u': 'ُ', 'i': 'ِ', '': 'ّ', '': 'ْ', '': 'ٔ', '': 'ٓ', '"': '«', '(': '(', ')': ')', '1': '۱', '2': '۲',
-    '3': '۳', '4': '۴', '5': '۵', '6': '۶', '7': '۷', '8': '۸', '9': '۹', '0': '۰', '.': '.', ':': ':',
-    '-': '—', '\n': '\n', '\r': '\r', '[': '[', ']': ']'
-}
+    'A': 'ا',
+    'B': 'ب',
+    'P': 'پ',
+    'T': 'ت',
+    'S': 'ث',
+    'J': 'ج',
+    'Č': 'چ',
+    'H': 'ح',
+    'Kh': 'خ',
+    'D': 'د',
+    'Z': 'ز',
+    'R': 'ر',
+    'Ž': 'ژ',
+    'Sh': 'ش',
+    'Ṣ': 'ص',
+    'Ẓ': 'ض',
+    'Ṭ': 'ط',
+    'Ẓ': 'ظ',
+    'ʿ': 'ع',
+    'Gh': 'غ',
+    'F': 'ف',
+    'Q': 'ق',
+    'K': 'ک',
+    'G': 'گ',
+    'L': 'ل',
+    'M': 'م',
+    'N': 'ن',
+    'V': 'و',
+    'Y': 'ی',
+    'Ā': 'آ',
+    'i': 'ي',
+    ' ': ' ',
+    ',': '،',
+    '?': '؟',
+    ';': '؛',
+    '!': '!',
+    ' ': '‌',
+    "'": 'ء',
+    'an': 'ً',
+    'a': 'َ',
+    'u': 'ُ',
+    'i': 'ِ',
+    '': 'ّ',
+    '': 'ْ',
+    '': 'ٔ',
+    '': 'ٓ',
+    '"': '«',
+    '(': '(',
+    ')': ')',
+    '1': '۱',
+    '2': '۲',
+    '3': '۳',
+    '4': '۴',
+    '5': '۵',
+    '6': '۶',
+    '7': '۷',
+    '8': '۸',
+    '9': '۹',
+    '0': '۰',
+    '.': '.',
+    ':': ':',
+    '-': '—',
+    '\n': '\n',
+    '\r': '\r',
+    '[': '[',
+    ']': ']'}
 
 # Function to convert Farsi script to Latin-based script
 
@@ -76,7 +134,8 @@ def write_text_file(file_path, text):
     with open(file_path, 'w', encoding='utf-8') as file:
         file.write(text)
 
-# Function to convert a file from Farsi script to Latin-based script and save it to another file
+# Function to convert a file from Farsi script to Latin-based script and
+# save it to another file
 
 
 def convert_farsi_file_to_latin(input_file_path, output_file_path):
@@ -84,7 +143,8 @@ def convert_farsi_file_to_latin(input_file_path, output_file_path):
     latin_text = farsi_to_latin_script(farsi_text)
     write_text_file(output_file_path, latin_text)
 
-# Function to convert a file from Latin-based script to Farsi script and save it to another file
+# Function to convert a file from Latin-based script to Farsi script and
+# save it to another file
 
 
 def convert_latin_file_to_farsi(input_file_path, output_file_path):
@@ -92,14 +152,16 @@ def convert_latin_file_to_farsi(input_file_path, output_file_path):
     farsi_text = latin_to_farsi_script(latin_text)
     write_text_file(output_file_path, farsi_text)
 
-# Function to convert a file from Farsi script to Latin-based script and return the result as a variable
+# Function to convert a file from Farsi script to Latin-based script and
+# return the result as a variable
 
 
 def convert_farsi_file_to_latin_variable(input_file_path):
     farsi_text = read_text_file(input_file_path)
     return farsi_to_latin_script(farsi_text)
 
-# Function to convert a file from Latin-based script to Farsi script and return the result as a variable
+# Function to convert a file from Latin-based script to Farsi script and
+# return the result as a variable
 
 
 def convert_latin_file_to_farsi_variable(input_file_path):

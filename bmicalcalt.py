@@ -16,8 +16,8 @@
     $FileInfo: bmicalc.py - Last Update: 08/15/2017 Ver. 0.0.1 RC 2 - Author: joshuatp $
 '''
 
-import math
 import argparse
+import math
 
 
 def cal_lbs_to_kg(lbs):
@@ -83,10 +83,20 @@ if __name__ == "__main__":
     parser.add_argument("-hc", "--height_cm", type=float,
                         help="Height in centimeters")
     parser.add_argument(
-        "-s", "--system", choices=["imperial", "metric"], required=True, help="Measurement system to use")
+        "-s",
+        "--system",
+        choices=[
+            "imperial",
+            "metric"],
+        required=True,
+        help="Measurement system to use")
     args = parser.parse_args()
 
     if args.system == "imperial":
-        print(cal_bmi_imperial(args.weight, args.height_feet, args.height_inches))
+        print(
+            cal_bmi_imperial(
+                args.weight,
+                args.height_feet,
+                args.height_inches))
     elif args.system == "metric":
         print(cal_bmi_metric(args.weight, args.height_cm))

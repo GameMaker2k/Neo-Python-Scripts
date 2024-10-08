@@ -17,8 +17,9 @@
 '''
 
 from __future__ import print_function
-import sys
+
 import argparse
+import sys
 from datetime import date
 
 __program_name__ = "PyNeoCal"
@@ -26,19 +27,19 @@ __project__ = __program_name__
 __project_url__ = "https://github.com/GameMaker2k/Neo-Python-Scripts"
 __version_info__ = (1, 2, 0, "RC 1", 1)
 __version_date_info__ = (2019, 3, 6, "RC 1", 1)
-__version_date__ = str(__version_date_info__[0])+"."+str(__version_date_info__[
-    1]).zfill(2)+"."+str(__version_date_info__[2]).zfill(2)
-if(__version_info__[4] != None):
+__version_date__ = str(__version_date_info__[0]) + "." + str(__version_date_info__[
+    1]).zfill(2) + "." + str(__version_date_info__[2]).zfill(2)
+if (__version_info__[4] is not None):
     __version_date_plusrc__ = __version_date__ + \
-        "-"+str(__version_date_info__[4])
-if(__version_info__[4] == None):
+        "-" + str(__version_date_info__[4])
+if (__version_info__[4] is None):
     __version_date_plusrc__ = __version_date__
-if(__version_info__[3] != None):
-    __version__ = str(__version_info__[0])+"."+str(__version_info__[1])+"."+str(
-        __version_info__[2])+" "+str(__version_info__[3])
-if(__version_info__[3] == None):
-    __version__ = str(
-        __version_info__[0])+"."+str(__version_info__[1])+"."+str(__version_info__[2])
+if (__version_info__[3] is not None):
+    __version__ = str(__version_info__[0]) + "." + str(__version_info__[1]) + "." + str(
+        __version_info__[2]) + " " + str(__version_info__[3])
+if (__version_info__[3] is None):
+    __version__ = str(__version_info__[
+        0]) + "." + str(__version_info__[1]) + "." + str(__version_info__[2])
 
 
 class CalendarInfo:
@@ -87,7 +88,12 @@ class CalendarInfo:
             raise ValueError(f"Unknown calendar system: {calendar}")
 
 
-def get_month_start(current_day, current_month, current_year, normal_start=True, calendar='gregorian'):
+def get_month_start(
+        current_day,
+        current_month,
+        current_year,
+        normal_start=True,
+        calendar='gregorian'):
     current_century = (current_year - 1) // 100 + 1
     current_year_short = abs(current_year) % 100
     year_code = (current_year_short + (current_year_short // 4)) % 7
@@ -131,7 +137,12 @@ def count_number_of_days(current_month, current_year, calendar='gregorian'):
     return daycount
 
 
-def get_week_number(current_date, current_month, current_year, normal_start=True, calendar='gregorian'):
+def get_week_number(
+        current_date,
+        current_month,
+        current_year,
+        normal_start=True,
+        calendar='gregorian'):
     # Determine if the year is a leap year
     is_leap = CalendarInfo.is_leap_year(current_year, calendar)
 
@@ -151,7 +162,13 @@ def get_week_number(current_date, current_month, current_year, normal_start=True
     return week_number
 
 
-def print_month(current_month, current_year, normal_start=True, calendar='gregorian', week_number=False, print_year=False):
+def print_month(
+        current_month,
+        current_year,
+        normal_start=True,
+        calendar='gregorian',
+        week_number=False,
+        print_year=False):
     is_leap = CalendarInfo.is_leap_year(current_year, calendar)
     month_days = CalendarInfo.MONTH_DAYS_LEAP if is_leap else CalendarInfo.MONTH_DAYS_NORMAL
 
@@ -188,7 +205,14 @@ def print_month(current_month, current_year, normal_start=True, calendar='gregor
                 print()
 
 
-def print_multiple_months(current_month, current_year, before, after, normal_start=True, gregorian=True, week_number=False):
+def print_multiple_months(
+        current_month,
+        current_year,
+        before,
+        after,
+        normal_start=True,
+        gregorian=True,
+        week_number=False):
     start_month = (current_month - before) % 12
     start_year = current_year + ((current_month - before) // 12)
     end_month = (current_month + after) % 12
@@ -200,11 +224,16 @@ def print_multiple_months(current_month, current_year, before, after, normal_sta
         start_month = (start_month + 1) % 12
         if start_month == 0:
             start_year += 1
-        if (start_month > end_month and start_year == end_year) or (start_year > end_year):
+        if (start_month > end_month and start_year ==
+                end_year) or (start_year > end_year):
             break
 
 
-def print_year(current_year, normal_start=True, calendar='gregorian', week_number=False):
+def print_year(
+        current_year,
+        normal_start=True,
+        calendar='gregorian',
+        week_number=False):
     if current_year < 0:
         current_year = 0
 
@@ -215,7 +244,13 @@ def print_year(current_year, normal_start=True, calendar='gregorian', week_numbe
                     calendar, week_number, False)
 
 
-def print_multiple_year(current_year, before, after, normal_start=True, calendar='gregorian', week_number=False):
+def print_multiple_year(
+        current_year,
+        before,
+        after,
+        normal_start=True,
+        calendar='gregorian',
+        week_number=False):
     start_year = current_year - before
     end_year = current_year + after
 
@@ -229,8 +264,11 @@ def main():
                         help="Enter year (default: current year)")
     parser.add_argument("-m", "--month", type=int, default=date.today().month,
                         help="Enter month (1-12) or -1 for the whole year")
-    parser.add_argument("-t", "--three", action="store_true",
-                        help="Show three months starting from the specified month")
+    parser.add_argument(
+        "-t",
+        "--three",
+        action="store_true",
+        help="Show three months starting from the specified month")
     parser.add_argument("-o", "--monday", action="store_true",
                         help="Start weeks on Monday")
     parser.add_argument("-j", "--julian", action="store_true",
