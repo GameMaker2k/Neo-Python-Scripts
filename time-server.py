@@ -160,7 +160,8 @@ class GenerateXMLPage(object):
         cherrypy.response.headers['Datetime-Microseconds'] = utc_ts_ms_str
         cherrypy.response.headers['Datetime-Timestampfull'] = utc_ts_full_str
         return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<datetime>\n <time timestamp=\"" + utc_ts_str + \
-            "\" microseconds=\"" + utc_ts_ms_str + "\" timestampfull=\"" + utc_ts_full_str + "\" />\n</datetime>\n"
+            "\" microseconds=\"" + utc_ts_ms_str + "\" timestampfull=\"" + \
+            utc_ts_full_str + "\" />\n</datetime>\n"
     index.exposed = True
 
 
@@ -183,7 +184,8 @@ class GenerateJSONPage(object):
         cherrypy.response.headers['Datetime-Microseconds'] = utc_ts_ms_str
         cherrypy.response.headers['Datetime-Timestampfull'] = utc_ts_full_str
         return "{\n  \"datetime\": {\n    \"time\": {\n      \"-timestamp\": \"" + utc_ts_str + "\",\n      \"-microseconds\": \"" + \
-            utc_ts_ms_str + "\",\n      \"-timestampfull\": \"" + utc_ts_full_str + "\"\n    }\n  }\n}\n"
+            utc_ts_ms_str + "\",\n      \"-timestampfull\": \"" + \
+            utc_ts_full_str + "\"\n    }\n  }\n}\n"
     index.exposed = True
 
 
@@ -228,7 +230,8 @@ class GenerateYAMLPage(object):
         cherrypy.response.headers['Datetime-Microseconds'] = utc_ts_ms_str
         cherrypy.response.headers['Datetime-Timestampfull'] = utc_ts_full_str
         return "---\n  datetime: \n    time: \n      -timestamp: \"" + utc_ts_str + \
-            "\"\n      -microseconds: \"" + utc_ts_ms_str + "\"\n      -timestampfull: \"" + utc_ts_full_str + "\"\n"
+            "\"\n      -microseconds: \"" + utc_ts_ms_str + \
+            "\"\n      -timestampfull: \"" + utc_ts_full_str + "\"\n"
     index.exposed = True
 
 
