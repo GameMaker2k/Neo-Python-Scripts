@@ -16,32 +16,20 @@
     $FileInfo: pyelf.py - Last Update: 3/18/2019 Ver. 1.0.0 RC 1 - Author: joshuatp $
 '''
 
-import argparse
 import os
 import sys
+import argparse
 
 __program_name__ = "PyELF"
 __project__ = __program_name__
 __project_url__ = "https://gist.github.com/KazukiPrzyborowski"
 __version_info__ = (1, 0, 0, "RC 1", 1)
 __version_date_info__ = (2019, 3, 18, "RC 1", 1)
-__version_date__ = f"{
-    __version_date_info__[0]}.{
-        str(
-            __version_date_info__[1]).zfill(2)}.{
-                str(
-                    __version_date_info__[2]).zfill(2)}"
+__version_date__ = f"{__version_date_info__[0]}.{str(__version_date_info__[1]).zfill(2)}.{str(__version_date_info__[2]).zfill(2)}"
 __version_date_plusrc__ = __version_date__ if __version_info__[
     4] is None else f"{__version_date__}-{str(__version_date_info__[4])}"
-__version__ = f"{
-    __version_info__[0]}.{
-        __version_info__[1]}.{
-            __version_info__[2]}" if __version_info__[3] is None else f"{
-                __version_info__[0]}.{
-                    __version_info__[1]}.{
-                        __version_info__[2]} {
-                            str(
-                                __version_info__[3])}"
+__version__ = f"{__version_info__[0]}.{__version_info__[1]}.{__version_info__[2]}" if __version_info__[
+    3] is None else f"{__version_info__[0]}.{__version_info__[1]}.{__version_info__[2]} {str(__version_info__[3])}"
 
 
 def get_elf_header(infile):

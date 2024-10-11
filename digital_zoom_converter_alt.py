@@ -19,10 +19,7 @@
 import argparse
 
 
-def convert_to_full_frame_focal_length(
-        sensor_focal_length,
-        sensor_type="apsc",
-        is_canon=False):
+def convert_to_full_frame_focal_length(sensor_focal_length, sensor_type="apsc", is_canon=False):
     """Convert sensor focal length to full frame equivalent."""
     if sensor_type == "apsc":
         full_frame_focal_length = sensor_focal_length * \
@@ -41,10 +38,7 @@ def convert_to_full_frame_focal_length(
     return full_frame_focal_length
 
 
-def convert_from_full_frame_focal_length(
-        full_frame_focal_length,
-        sensor_type="apsc",
-        is_canon=False):
+def convert_from_full_frame_focal_length(full_frame_focal_length, sensor_type="apsc", is_canon=False):
     """Convert full frame focal length to sensor equivalent."""
     if sensor_type == "apsc":
         sensor_focal_length = full_frame_focal_length / \

@@ -39,8 +39,8 @@ def pashto_to_latin_script(text):
     result = ''
     i = 0
     while i < len(text):
-        if i + 1 < len(text) and text[i:i + 2] in arabic_to_latin_pashto:
-            result += arabic_to_latin_pashto[text[i:i + 2]]
+        if i + 1 < len(text) and text[i:i+2] in arabic_to_latin_pashto:
+            result += arabic_to_latin_pashto[text[i:i+2]]
             i += 2
         else:
             result += arabic_to_latin_pashto.get(text[i], text[i])
@@ -54,8 +54,8 @@ def latin_to_pashto_script(text):
     result = ''
     i = 0
     while i < len(text):
-        if i + 1 < len(text) and text[i:i + 2] in latin_to_arabic_pashto:
-            result += latin_to_arabic_pashto[text[i:i + 2]]
+        if i + 1 < len(text) and text[i:i+2] in latin_to_arabic_pashto:
+            result += latin_to_arabic_pashto[text[i:i+2]]
             i += 2
         else:
             result += latin_to_arabic_pashto.get(text[i], text[i])
@@ -78,8 +78,7 @@ def write_text_file(file_path, text):
     with open(file_path, 'w', encoding='utf-8') as file:
         file.write(text)
 
-# Function to convert a file from Pashto script to Latin-based script and
-# save it to another file
+# Function to convert a file from Pashto script to Latin-based script and save it to another file
 
 
 def convert_pashto_file_to_latin(input_file_path, output_file_path):
@@ -87,8 +86,7 @@ def convert_pashto_file_to_latin(input_file_path, output_file_path):
     latin_text = pashto_to_latin_script(pashto_text)
     write_text_file(output_file_path, latin_text)
 
-# Function to convert a file from Latin-based script to Pashto script and
-# save it to another file
+# Function to convert a file from Latin-based script to Pashto script and save it to another file
 
 
 def convert_latin_file_to_pashto(input_file_path, output_file_path):
@@ -96,16 +94,14 @@ def convert_latin_file_to_pashto(input_file_path, output_file_path):
     pashto_text = latin_to_pashto_script(latin_text)
     write_text_file(output_file_path, pashto_text)
 
-# Function to convert a file from Pashto script to Latin-based script and
-# return the result as a variable
+# Function to convert a file from Pashto script to Latin-based script and return the result as a variable
 
 
 def convert_pashto_file_to_latin_variable(input_file_path):
     pashto_text = read_text_file(input_file_path)
     return pashto_to_latin_script(pashto_text)
 
-# Function to convert a file from Latin-based script to Pashto script and
-# return the result as a variable
+# Function to convert a file from Latin-based script to Pashto script and return the result as a variable
 
 
 def convert_latin_file_to_pashto_variable(input_file_path):

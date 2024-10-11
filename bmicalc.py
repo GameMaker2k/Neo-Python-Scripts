@@ -28,7 +28,7 @@ def cal_kg_to_lbs(kg):
 def cal_ins_to_fet_ins(ins):
     retfet = int(ins / 12)
     retins = int(ins % 12)
-    return float(str(int(retfet)) + "." + str(int(retins)))
+    return float(str(int(retfet))+"."+str(int(retins)))
 
 
 def cal_fet_ins_to_cm(fet, ins):
@@ -46,7 +46,7 @@ def cal_cm_to_fet_ins(cm):
     ins = int(cm * 0.3937008)
     retfet = int(ins / 12)
     retins = int(ins % 12)
-    return float(str(int(retfet)) + "." + str(int(retins)))
+    return float(str(int(retfet))+"."+str(int(retins)))
 
 
 def cal_cm_to_ins(cm):
@@ -62,10 +62,10 @@ def cal_bmi_imperial(lbs, fet, ins):
     diff = bmi - f_bmi
     diff = diff * 10
     diff = round(diff)
-    if (diff == 10):
+    if(diff == 10):
         f_bmi = f_bmi + 1
         diff = 0
-    bmi = float(str(int(f_bmi)) + "." + str(int(diff)))
+    bmi = float(str(int(f_bmi))+"."+str(int(diff)))
     return bmi
 
 
@@ -77,10 +77,10 @@ def cal_bmi_metric(kg, cm):
     diff = bmi - f_bmi
     diff = diff * 10
     diff = round(diff)
-    if (diff == 10):
+    if(diff == 10):
         f_bmi = f_bmi + 1
         diff = 0
-    bmi = float(str(int(f_bmi)) + "." + str(int(diff)))
+    bmi = float(str(int(f_bmi))+"."+str(int(diff)))
     return bmi
 
 
