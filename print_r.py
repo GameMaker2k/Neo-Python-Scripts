@@ -1,3 +1,5 @@
+import sys
+
 def print_r(var, indent=0):
     """Equivalent of PHP's print_r for Python 2 and 3."""
     spacing = ' ' * indent
