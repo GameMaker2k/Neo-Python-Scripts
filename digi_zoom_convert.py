@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from __future__ import division, print_function
+from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 
 
 def convert_to_full_frame_focal_length(sensor_focal_length, sensor_type="apsc", is_canon=False):

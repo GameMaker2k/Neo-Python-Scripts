@@ -15,7 +15,7 @@
     $FileInfo: bbgen-symlnk.py - Last Update: 2/20/2015 Ver. 1.0.5 RC 2 - Author: cooldude2k $
 '''
 
-from __future__ import absolute_import, division, print_function, unicode_literals
+from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 import os
 import sys
 import re

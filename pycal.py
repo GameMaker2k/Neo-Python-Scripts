@@ -16,7 +16,7 @@
     $FileInfo: pycal.py - Last Update: 3/6/2021 Ver. 1.2.0 RC 1 - Author: joshuatp $
 '''
 
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 import sys
 import argparse
 from datetime import date

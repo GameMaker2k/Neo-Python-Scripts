@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: iso-8859-15 -*-
 
-from __future__ import print_function
+from __future__ import absolute_import, division, print_function, unicode_literals, generators, with_statement, nested_scopes
 
 
 def get_info(invar):
