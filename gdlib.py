@@ -560,6 +560,14 @@ def imageloadfont(file):
         font = ImageFont.load_default()
     return font
 
+def imagerectangle(image_res, x1, y1, x2, y2, color_index):
+    """
+    Draw a rectangle.
+    """
+    color = image_res.get_color(color_index)
+    # Draw rectangle outline
+    image_res.draw.rectangle([x1, y1, x2, y2], outline=color, width=image_res.thickness)
+
 def imagepolygon(image_res, points, num_points, color_index):
     """
     Draws a polygon.
