@@ -259,6 +259,18 @@ def imagecolorallocatealpha(image_res, red, green, blue, alpha):
     image_res.next_color_index += 1
     return color_index
 
+def imagecolorallocate(image_res, red, green, blue):
+    """
+    Allocate a color for an image.
+    """
+    # For images with mode 'P' (palette-based), we need to map color indices.
+    # For 'RGB' or 'RGBA', we can store colors directly.
+    color = (red, green, blue, 255)  # Default alpha is 255 (opaque)
+    color_index = image_res.next_color_index
+    image_res.colors[color_index] = color
+    image_res.next_color_index += 1
+    return color_index
+
 def imagecolorclosestalpha(image_res, red, green, blue, alpha):
     """
     Get the index of the closest color to the specified color + alpha.
