@@ -1,121 +1,146 @@
 import struct
 from typing import List
 
-def lzw_compress(uncompressed: str, max_table_size: int = 4096) -> List[int]:
-    """
-    Compress a string to a list of output symbols using the LZW algorithm.
+# =========================
+# Bytes-based LZW functions
+# =========================
 
-    :param uncompressed: The input string to compress.
-    :param max_table_size: Maximum size for the dictionary.
-    :return: A list of integer codes representing the compressed data.
+def lzw_compress_bytes_core(data: bytes, max_table_size: int = 4096) -> List[int]:
     """
-    if not uncompressed:
+    Compress a bytes object into a list of integer codes using LZW.
+    This function works directly on bytes.
+    
+    :param data: The input bytes to compress.
+    :param max_table_size: Maximum size for the dictionary.
+    :return: A list of integer codes.
+    """
+    if not data:
         return []
     
-    # Initialize the dictionary with single-character mappings.
+    # Initialize the dictionary with single-byte entries.
     dict_size = 256
-    dictionary = {chr(i): i for i in range(dict_size)}
+    # The keys are bytes objects of length 1.
+    dictionary = {bytes([i]): i for i in range(dict_size)}
     
-    w = ""
+    w = b""
     result = []
-    for c in uncompressed:
+    for byte in data:
+        c = bytes([byte])
         wc = w + c
         if wc in dictionary:
             w = wc
         else:
-            # Output the code for w.
             result.append(dictionary[w])
-            # Only add new sequences if we haven't reached the maximum table size.
             if dict_size < max_table_size:
                 dictionary[wc] = dict_size
                 dict_size += 1
             w = c
-
-    # Output the code for w if it's not empty.
     if w:
         result.append(dictionary[w])
-    
     return result
 
-
-def lzw_decompress(compressed: List[int], max_table_size: int = 4096) -> str:
+def lzw_decompress_bytes_core(codes: List[int], max_table_size: int = 4096) -> bytes:
     """
-    Decompress a list of output symbols to a string using the LZW algorithm.
-
-    :param compressed: The list of integer codes to decompress.
+    Decompress a list of integer codes into a bytes object using LZW.
+    
+    :param codes: The list of integer codes.
     :param max_table_size: Maximum size for the dictionary.
-    :return: The original uncompressed string.
+    :return: The decompressed bytes.
     """
-    if not compressed:
-        return ""
+    if not codes:
+        return b""
     
-    # Initialize the dictionary with single-character mappings.
     dict_size = 256
-    dictionary = [chr(i) for i in range(dict_size)]
+    dictionary = [bytes([i]) for i in range(dict_size)]
     
-    # Start with the first code.
     result = []
-    w = dictionary[compressed[0]]
+    # First code.
+    w = dictionary[codes[0]]
     result.append(w)
     
-    # Process the rest of the codes.
-    for k in compressed[1:]:
+    for k in codes[1:]:
         if k < len(dictionary):
             entry = dictionary[k]
         elif k == dict_size:
-            # Special case: entry = w + w[0]
-            entry = w + w[0]
+            # Special case: when the current code is exactly the next code to be assigned.
+            entry = w + w[:1]
         else:
             raise ValueError(f"Bad compressed code: {k}")
         
         result.append(entry)
-        # Add new entry to the dictionary if the maximum size hasn't been reached.
         if dict_size < max_table_size:
-            dictionary.append(w + entry[0])
+            dictionary.append(w + entry[:1])
             dict_size += 1
         w = entry
+        
+    return b"".join(result)
 
-    return "".join(result)
-
-
-def lzw_compress_bytes(uncompressed: str, max_table_size: int = 4096) -> bytes:
+def lzw_compress_bytes(data: bytes, max_table_size: int = 4096) -> bytes:
     """
-    Compress a string and return a bytes object.
+    Compress a bytes object using LZW and return a bytes object containing the packed codes.
     
-    This function wraps lzw_compress() by converting its list-of-int output into a bytes
-    object, where each code is stored as an unsigned 16-bit integer.
+    Each integer code is stored as an unsigned 16-bit (2 bytes) big-endian value.
     
-    :param uncompressed: The input string to compress.
+    :param data: The input bytes to compress.
     :param max_table_size: Maximum size for the dictionary.
-    :return: A bytes object containing the packed compressed data.
+    :return: A bytes object with the packed compressed data.
     """
-    # Get the list of integer codes from the standard LZW compression.
-    codes = lzw_compress(uncompressed, max_table_size)
-    
-    # Pack each integer as an unsigned short (16 bits) in big-endian order.
-    # Note: With max_table_size=4096 the codes fit in 12 bits and are safe to pack in 16 bits.
+    codes = lzw_compress_bytes_core(data, max_table_size)
+    # Pack all codes into a bytes object. (2 bytes per code)
     return struct.pack('>' + 'H' * len(codes), *codes)
 
-
-def lzw_decompress_bytes(compressed_bytes: bytes, max_table_size: int = 4096) -> str:
+def lzw_decompress_bytes(compressed: bytes, max_table_size: int = 4096) -> bytes:
     """
-    Decompress a bytes object (produced by lzw_compress_bytes) back to a string.
+    Decompress a bytes object (packed codes) back into the original bytes.
     
-    This function unpacks the bytes object into a list of integers (codes) and then uses
-    lzw_decompress() to reconstruct the original string.
+    The input should be in the format produced by lzw_compress_bytes.
     
-    :param compressed_bytes: The bytes object containing the packed compressed data.
+    :param compressed: A bytes object with packed compressed codes.
     :param max_table_size: Maximum size for the dictionary.
-    :return: The original uncompressed string.
+    :return: The decompressed bytes.
     """
-    # Each code is stored as 2 bytes. Compute the number of codes.
-    num_codes = len(compressed_bytes) // 2
+    if not compressed:
+        return b""
     
-    # Unpack the bytes object to a tuple of integers.
-    codes = list(struct.unpack('>' + 'H' * num_codes, compressed_bytes))
+    # Each code is stored as 2 bytes.
+    num_codes = len(compressed) // 2
+    codes = list(struct.unpack('>' + 'H' * num_codes, compressed))
+    return lzw_decompress_bytes_core(codes, max_table_size)
+
+# ================================
+# Wrapper functions for Unicode
+# ================================
+
+def compress_str_to_bytes(uncompressed: str, max_table_size: int = 4096) -> bytes:
+    """
+    Compress a Unicode string using LZW.
     
-    # Decompress using the standard LZW decompression.
-    return lzw_decompress(codes, max_table_size)
+    The string is first encoded into UTF-8 bytes, then compressed.
+    
+    :param uncompressed: The input Unicode string.
+    :param max_table_size: Maximum size for the dictionary.
+    :return: A bytes object containing the compressed data.
+    """
+    data = uncompressed.encode('utf-8')
+    return lzw_compress_bytes(data, max_table_size)
+
+def decompress_bytes_to_str(compressed: bytes, max_table_size: int = 4096) -> str:
+    """
+    Decompress a bytes object (produced by compress_str_to_bytes) back to a Unicode string.
+    
+    The output bytes are decoded from UTF-8.
+    
+    :param compressed: A bytes object containing the compressed data.
+    :param max_table_size: Maximum size for the dictionary.
+    :return: The decompressed Unicode string.
+    """
+    data = lzw_decompress_bytes(compressed, max_table_size)
+    return data.decode('utf-8')
+
+
+# ================================
+# Example usage
+# ================================
 
 
 # Example usage:
