@@ -16,7 +16,7 @@ import math
 # Random Pokemon TCG Pocket Calc App
 
 def CalcPokemonTCGBattlePotins(twins, tpoints, mdamage, multi=3, divi=3):
-    calcfist = (twins * multi) -  tpoints
+    calcfist = (twins * multi) - tpoints
     calcsecond = math.ceil(tpoints / divi) - twins
     calcfinal = (calcfist + calcsecond) + mdamage
     return calcfinal
