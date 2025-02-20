@@ -10,10 +10,13 @@
     $FileInfo: pokemontcgpocket.py - Last Update: 08/15/2017 Ver. 0.0.1 RC 2 - Author: joshuatp $
 '''
 
+from __future__ import division, print_function
+import math
+
 # Random Pokemon TCG Pocket Calc App
 
 def CalcPokemonTCGBattlePotins(twins, tpoints, mdamage, multi=3, divi=3):
     calcfist = (twins * multi) -  tpoints
-    calcsecond = (tpoints / divi) - twins
+    calcsecond = math.ceil(tpoints / divi) - twins
     calcfinal = (calcfist + calcsecond) + mdamage
     return calcfinal
