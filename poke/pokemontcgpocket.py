@@ -31,7 +31,7 @@ def main():
     args = parser.parse_args()
     
     result = CalcPokemonTCGBattlePotins(args.twins, args.tpoints, args.mdamage, args.multi, args.divi)
-    print(f"Calculated Pokemon TCG Battle Points: {result}")
+    print("Calculated Pokemon TCG Battle Points: {0}".format(result))
 
 if __name__ == "__main__":
     main()
