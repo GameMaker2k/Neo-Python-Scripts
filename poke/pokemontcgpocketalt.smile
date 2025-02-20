@@ -1,0 +1,61 @@
+' This program is free software; you can redistribute it and/or modify
+' it under the terms of the Revised BSD License.
+' This program is distributed in the hope that it will be useful,
+' but WITHOUT ANY WARRANTY; without even the implied warranty of
+' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+' See the Revised BSD License for more details.
+
+'--------------------------------------------------------------------
+' CalcPokemonTCGBattlePoints:
+'   A function that calculates the TCG Battle Points from given inputs.
+'
+'   twins   : number of wins
+'   tpoints : total points
+'   mdamage : max damage dealt
+'   multi   : multiplier (default 3)
+'   divi    : divisor (default 3)
+'
+'   Returns an integer with the calculated "Battle Points."
+'--------------------------------------------------------------------
+DEF CalcPokemonTCGBattlePoints(TWINS, TPOINTS, MDAMAGE, MULTI, DIVI)
+ CALCFIST=(TWINS*MULTI)-TPOINTS
+ CALCSECOND=CEIL(TPOINTS/DIVI)-TWINS  ' Using CEIL() from SmileBASIC
+ CALCFINAL=CALCFIST+CALCSECOND+MDAMAGE
+ RETURN CALCFINAL
+END
+
+'--------------------------------------------------------------------
+' Main program flow
+' Since there is no "command-line" in SmileBASIC on Switch, we prompt
+' the user to enter values. Then we compute and display the result.
+'--------------------------------------------------------------------
+@MAIN
+
+' Variables to store user inputs
+DIM TWINS,TPOINTS,MDAMAGE,MULTI,DIVI
+
+' Default for multiplier & divisor
+MULTI=3
+DIVI=3
+
+PRINT "Enter TWINS (integer): "
+INPUT TWINS
+
+PRINT "Enter TPOINTS (integer): "
+INPUT TPOINTS
+
+PRINT "Enter MDAMAGE (integer): "
+INPUT MDAMAGE
+
+PRINT "Enter MULTI (default is 3, press ENTER for 3 or type a new value): "
+INPUT MULTI
+IF MULTI==0 THEN MULTI=3  ' If user just presses enter, we keep 3
+
+PRINT "Enter DIVI (default is 3, press ENTER for 3 or type a new value): "
+INPUT DIVI
+IF DIVI==0 THEN DIVI=3
+
+RESULT=CalcPokemonTCGBattlePoints(TWINS,TPOINTS,MDAMAGE,MULTI,DIVI)
+PRINT "Calculated Pokemon TCG Battle Points: ";RESULT
+
+END

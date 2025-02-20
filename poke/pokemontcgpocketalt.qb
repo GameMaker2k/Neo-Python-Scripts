@@ -1,0 +1,82 @@
+' This program is free software; you can redistribute it and/or modify
+' it under the terms of the Revised BSD License.
+' This program is distributed in the hope that it will be useful,
+' but WITHOUT ANY WARRANTY; without even the implied warranty of
+' MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+' See the Revised BSD License for more details.
+'
+' POKEMONTCGPOCKET.BAS
+'
+' Quick port of the original Python logic into QB64 / QuickBasic style.
+'
+' Calculation:
+'   calcfist   = (twins * multi) - tpoints
+'   calcsecond = ceil(tpoints / divi) - twins
+'   calcfinal  = calcfist + calcsecond + mdamage
+'
+' We'll do integer-based ceiling with integer math:
+'   ceil(x / y) = (x + y - 1) \ y   (for x,y > 0).
+
+'------------ Function to Calculate Pokemon TCG Battle Points ------------
+FUNCTION CalcPokemonTCGBattlePoints& (twins&, tpoints&, mdamage&, multi&, divi&)
+    DIM calcfist&, calcsecond&, calcfinal&
+
+    ' (twins * multi) - tpoints
+    calcfist& = (twins& * multi&) - tpoints&
+
+    ' ceil(tpoints/divi) => (tpoints + (divi - 1)) \ divi for integer math
+    calcsecond& = ((tpoints& + (divi& - 1)) \ divi&) - twins&
+
+    calcfinal& = calcfist& + calcsecond& + mdamage&
+    CalcPokemonTCGBattlePoints& = calcfinal&
+END FUNCTION
+
+'----------------------------- Main Program -----------------------------
+SUB Main
+    ' If you want to test inside QB64 IDE without command-line arguments,
+    ' you could manually set arguments here or prompt for them.
+
+    IF _COMMANDCOUNT < 3 THEN
+        PRINT "Usage: "; _COMMAND$(0); " <twins> <tpoints> <mdamage> [--multi X] [--divi Y]"
+        END
+    END IF
+
+    ' Parse required arguments
+    DIM twins&, tpoints&, mdamage&
+
+    twins&   = VAL(_COMMAND$(1))
+    tpoints& = VAL(_COMMAND$(2))
+    mdamage& = VAL(_COMMAND$(3))
+
+    ' Default optional arguments
+    DIM multi&, divi&
+    multi& = 3
+    divi&  = 3
+
+    DIM i&: i& = 4
+
+    DO WHILE i& <= _COMMANDCOUNT
+        SELECT CASE UCASE$(_COMMAND$(i&))
+        CASE "--MULTI"
+            IF (i& + 1) <= _COMMANDCOUNT THEN
+                multi& = VAL(_COMMAND$(i& + 1))
+                i& = i& + 1
+            END IF
+        CASE "--DIVI"
+            IF (i& + 1) <= _COMMANDCOUNT THEN
+                divi& = VAL(_COMMAND$(i& + 1))
+                i& = i& + 1
+            END IF
+        END SELECT
+        i& = i& + 1
+    LOOP
+
+    DIM result&
+    result& = CalcPokemonTCGBattlePoints&(twins&, tpoints&, mdamage&, multi&, divi&)
+
+    PRINT "Calculated Pokemon TCG Battle Points: "; result&
+END SUB
+
+'------------------------ Program Entry Point -------------------------
+Main
+END
