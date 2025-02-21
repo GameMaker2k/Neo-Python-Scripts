@@ -15,6 +15,14 @@ import argparse
 import math
 
 def CalcPokemonTCGBattlePotins(twins, tpoints, mdamage, multi=3, divi=3):
+    """
+    Calculate a final battle score based on:
+      - twins  = total wins
+      - tpoints = total points
+      - mdamage = max damage
+      - multi   = multiplier for wins (default=3)
+      - divi    = divisor for points (default=3)
+    """
     calcfist = (twins * multi) - tpoints
     calcsecond = math.ceil(tpoints / divi) - twins
     calcfinal = (calcfist + calcsecond) + mdamage
