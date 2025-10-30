@@ -62,7 +62,7 @@ def get_usage_snapshot():
     """
     Return a tuple (user_time, sys_time, peak_kb_raw)
     - user_time/sys_time include this process + children
-    - peak_kb_raw is ru_maxrss (platform-dependent resource usage peak, usually in KB)
+    - peak_kb_raw is ru_maxrss (platform-dependent peak RSS, usually KB)
     If we can't measure (no resource module), all are None.
     """
     if resource is None:
@@ -75,9 +75,8 @@ def get_usage_snapshot():
         user_time = usage_self.ru_utime + usage_children.ru_utime
         sys_time = usage_self.ru_stime + usage_children.ru_stime
 
-        # ru_maxrss is "maximum resident set size used (in kilobytes)" on Linux.
-        # On macOS it's in bytes historically, but on most modern builds it's KB.
-        # We'll treat it as KB-ish and just scale to MB. Good enough for benchmarking.
+        # ru_maxrss is KB on Linux, historically bytes on some BSDs/macOS.
+        # We'll treat it as KB-ish and scale to MB best-effort.
         peak_kb_raw = max(usage_self.ru_maxrss, usage_children.ru_maxrss)
 
         return user_time, sys_time, peak_kb_raw
@@ -88,7 +87,6 @@ def get_usage_snapshot():
 def kb_to_mb(kb_val):
     if kb_val is None:
         return None
-    # best-effort normalize
     return kb_val / 1024.0
 
 
@@ -121,7 +119,6 @@ def push_env(env_overrides):
         return
 
     old_values = {}
-    # apply overrides
     for k, v in env_overrides.items():
         old_values[k] = os.environ.get(k, None)
         os.environ[k] = v
@@ -129,7 +126,6 @@ def push_env(env_overrides):
     try:
         yield
     finally:
-        # restore originals
         for k, old in old_values.items():
             if old is None:
                 # key didn't exist before
@@ -167,7 +163,7 @@ def run_target_once(script_path: Path, script_args, quiet: bool):
     # Prepare argv for the target
     sys.argv = [str(script_path)] + list(script_args)
 
-    # Fresh global namespace so each run is "clean"
+    # Fresh global namespace so each run is isolated
     globals_dict = {"__name__": "__main__"}
 
     # Read & compile target script
@@ -226,9 +222,8 @@ def run_target_once(script_path: Path, script_args, quiet: bool):
         sys_elapsed = None
 
     # Memory:
-    # peak_kb_* is "peak so far in the process". To approximate per-run memory
-    # growth, we take the positive part of (after - before). If previous runs
-    # already had a higher peak, delta can go negative; clamp to 0.
+    # peak_kb_* is "peak so far in the process". To approximate per-run
+    # growth we take after-before (clamped at 0). Also record absolute peak.
     if peak_kb_before is not None and peak_kb_after is not None:
         delta_kb = peak_kb_after - peak_kb_before
         if delta_kb < 0:
@@ -293,7 +288,7 @@ def summarize_runs(runs):
     rss_after_vals = [r["rss_mb_after"] for r in runs if r["rss_mb_after"] is not None]
     peak_rss = max(rss_after_vals) if rss_after_vals else None
 
-    # Worst (nonzero) exit code
+    # Worst (nonzero) exit code from any run
     worst_exit = 0
     for r in runs:
         if r["exit_code"] != 0:
@@ -306,15 +301,16 @@ def summarize_runs(runs):
         "user_sd": user_sd,
         "sys_mean": sys_mean,
         "sys_sd": sys_sd,
-        "peak_rss": peak_rss,
+        "peak_rss": peak_rss,          # MB
         "worst_exit": worst_exit,
     }
 
 
-def print_summary(stats, num_runs, max_real_threshold=None):
+def print_summary(stats, num_runs, max_real_threshold=None, max_mem_threshold=None):
     """
     Pretty summary with alignment and color.
-    Also returns a boolean: did we pass the --max-real guard?
+    Returns a tuple:
+      (passed_exit_ok, passed_perf_ok, passed_mem_ok)
     """
     def fmt_mean_sd(mean, sd):
         if mean is None:
@@ -323,7 +319,7 @@ def print_summary(stats, num_runs, max_real_threshold=None):
 
     print(f"\n=== summary over {num_runs} runs ===")
 
-    # We'll align the left labels to width 14 for readability
+    # line up labels to width 14
     print(f"{'real avg ± sd:'.ljust(14)} {fmt_mean_sd(stats['real_mean'], stats['real_sd'])}")
     print(f"{'user avg ± sd:'.ljust(14)} {fmt_mean_sd(stats['user_mean'], stats['user_sd'])}")
     print(f"{'sys  avg ± sd:'.ljust(14)} {fmt_mean_sd(stats['sys_mean'],  stats['sys_sd'])}")
@@ -337,7 +333,7 @@ def print_summary(stats, num_runs, max_real_threshold=None):
     worst_exit_line = "0" if ok_exit else str(stats["worst_exit"])
     print(f"{'worst exit:'.ljust(14)} {color_ok(worst_exit_line, ok_exit)}")
 
-    # Performance guard
+    # Performance gate
     passed_perf = True
     if max_real_threshold is not None and stats["real_mean"] is not None:
         passed_perf = stats["real_mean"] <= max_real_threshold
@@ -347,7 +343,17 @@ def print_summary(stats, num_runs, max_real_threshold=None):
         )
         print(f"{'perf gate:'.ljust(14)} {color_ok(perf_line, passed_perf)}")
 
-    return (ok_exit and passed_perf)
+    # Memory gate
+    passed_mem = True
+    if max_mem_threshold is not None and stats["peak_rss"] is not None:
+        passed_mem = stats["peak_rss"] <= max_mem_threshold
+        mem_line = (
+            f"{stats['peak_rss']:.1f}MB peak <= {max_mem_threshold:.1f}MB ? "
+            + ("PASS" if passed_mem else "FAIL")
+        )
+        print(f"{'mem gate:'.ljust(14)} {color_ok(mem_line, passed_mem)}")
+
+    return ok_exit, passed_perf, passed_mem
 
 
 def write_csv(csv_path, stats, target_script, target_args, runs, warmup):
@@ -357,7 +363,6 @@ def write_csv(csv_path, stats, target_script, target_args, runs, warmup):
     """
     file_exists = os.path.exists(csv_path)
 
-    # Prepare row
     row = {
         "timestamp": datetime.now().isoformat(timespec="seconds"),
         "script": str(target_script),
@@ -501,6 +506,13 @@ def parse_args(argv):
         help="Fail (nonzero exit) if avg real time exceeds this many seconds."
     )
     parser.add_argument(
+        "--max-mem",
+        dest="max_mem",
+        type=float,
+        default=None,
+        help="Fail (nonzero exit) if peak memory exceeds this many MB."
+    )
+    parser.add_argument(
         "--csv",
         dest="csv_path",
         default=None,
@@ -540,7 +552,8 @@ def main():
         print("  python time_script.py "
               "[--runs N] [--warmup M] [--quiet-target] [--show-each] "
               "[--cwd DIR] [--env KEY=VAL ...] [--no-gc] "
-              "[--max-real SEC] [--csv FILE] [--json] "
+              "[--max-real SEC] [--max-mem MB] "
+              "[--csv FILE] [--json] "
               "-- <script> [args...]")
         sys.exit(1)
 
@@ -571,10 +584,11 @@ def main():
     # Summary / post-processing
     stats = summarize_runs(results)
 
-    passed_all = print_summary(
+    ok_exit, passed_perf, passed_mem = print_summary(
         stats,
         num_runs=opts.runs,
         max_real_threshold=opts.max_real,
+        max_mem_threshold=opts.max_mem,
     )
 
     # Optional CSV logging
@@ -598,14 +612,19 @@ def main():
             warmup=opts.warmup,
         )
 
-    # Exit code logic:
-    # - If any run exited nonzero, we already marked that in stats["worst_exit"].
-    # - If perf gate (--max-real) failed, passed_all=False.
+    # Final exit code logic:
+    # - If any run exited nonzero, we fail with that code.
+    # - If perf gate fails (--max-real), we fail.
+    # - If mem gate fails (--max-mem), we fail.
     final_exit = 0
     if stats["worst_exit"] != 0:
         final_exit = stats["worst_exit"]
-    if not passed_all:
-        # If performance gate failed, override to 1 unless something worse already happened.
+
+    if not passed_perf:
+        if final_exit == 0:
+            final_exit = 1
+
+    if not passed_mem:
         if final_exit == 0:
             final_exit = 1
 
