@@ -245,6 +245,36 @@ def run_target_once(script_path: Path, script_args, quiet: bool):
     }
 
 
+# --- Progress bar helpers ---
+
+def build_progress_bar(done, total, width=10):
+    """
+    Return a string like [####------] for done/total.
+    width = total slots in the bar.
+    """
+    if total <= 0:
+        total = 1
+    frac = done / total
+    if frac < 0:
+        frac = 0
+    if frac > 1:
+        frac = 1
+    filled = int(round(frac * width))
+    if filled > width:
+        filled = width
+    return "[" + "#" * filled + "-" * (width - filled) + "]"
+
+def print_progress_line(run_idx, total_runs, status_text):
+    """
+    Overwrite the same console line with carriage return.
+    status_text is appended after the bar and run info.
+    """
+    bar = build_progress_bar(run_idx, total_runs, width=10)
+    line = f"{bar} Run {run_idx}/{total_runs} {status_text}"
+    # \r moves cursor to start of line, no newline so we can update in place
+    print("\r" + line, end="", flush=True)
+
+
 # --- Printing helpers ---
 
 def print_single_run(run, run_index: int | None = None):
@@ -409,6 +439,72 @@ def print_json_summary(stats, target_script, target_args, runs, warmup):
     print("\nJSON summary:")
     print(json.dumps(out, indent=2, sort_keys=True))
 
+def dump_yaml(obj, indent=0):
+    """
+    Minimal YAML dumper (no external deps).
+    Handles dicts, lists, numbers, strings, None.
+    Returns a string.
+    """
+    sp = "  " * indent
+    if isinstance(obj, dict):
+        lines = []
+        for k, v in obj.items():
+            # keys will be simple strings in our usage
+            if isinstance(v, (dict, list)):
+                lines.append(f"{sp}{k}:")
+                lines.append(dump_yaml(v, indent + 1))
+            else:
+                lines.append(f"{sp}{k}: {scalar_to_yaml(v)}")
+        return "\n".join(lines)
+    elif isinstance(obj, list):
+        lines = []
+        for item in obj:
+            if isinstance(item, (dict, list)):
+                lines.append(f"{sp}-")
+                lines.append(dump_yaml(item, indent + 1))
+            else:
+                lines.append(f"{sp}- {scalar_to_yaml(item)}")
+        return "\n".join(lines)
+    else:
+        # scalar at top level
+        return f"{sp}{scalar_to_yaml(obj)}"
+
+def scalar_to_yaml(v):
+    if v is None:
+        return "null"
+    if isinstance(v, bool):
+        return "true" if v else "false"
+    if isinstance(v, (int, float)):
+        return str(v)
+    # string fallback
+    s = str(v)
+    # Quote only if we see something YAML might parse weird.
+    # We'll keep it simple: if it has colon, newline, or starts with '-' or '#', quote.
+    if (":" in s or "\n" in s or s.startswith("-") or s.startswith("#")):
+        return json.dumps(s)  # reuse JSON quoting as valid YAML string
+    return s
+
+def print_yaml_summary(stats, target_script, target_args, runs, warmup):
+    """
+    Print a machine-readable YAML summary to stdout (no PyYAML required).
+    """
+    out = {
+        "script": str(target_script),
+        "args": target_args,
+        "runs": runs,
+        "warmup": warmup,
+        "real_avg_s": stats["real_mean"],
+        "real_sd_s": stats["real_sd"],
+        "user_avg_s": stats["user_mean"],
+        "user_sd_s": stats["user_sd"],
+        "sys_avg_s": stats["sys_mean"],
+        "sys_sd_s": stats["sys_sd"],
+        "peak_mem_mb": stats["peak_rss"],
+        "worst_exit": stats["worst_exit"],
+    }
+    print("\nYAML summary:")
+    print(dump_yaml(out))
+
 
 # --- arg parsing ---
 
@@ -524,6 +620,12 @@ def parse_args(argv):
         action="store_true",
         help="Also print machine-readable JSON summary."
     )
+    parser.add_argument(
+        "--yaml",
+        dest="emit_yaml",
+        action="store_true",
+        help="Also print machine-readable YAML summary."
+    )
 
     opts = parser.parse_args(timer_argv)
     return opts, target_argv
@@ -553,7 +655,7 @@ def main():
               "[--runs N] [--warmup M] [--quiet-target] [--show-each] "
               "[--cwd DIR] [--env KEY=VAL ...] [--no-gc] "
               "[--max-real SEC] [--max-mem MB] "
-              "[--csv FILE] [--json] "
+              "[--csv FILE] [--json] [--yaml] "
               "-- <script> [args...]")
         sys.exit(1)
 
@@ -568,18 +670,46 @@ def main():
         for _ in range(opts.warmup):
             run_target_once(script_path, script_args, quiet=opts.quiet_target)
 
-    # Measured runs
+    # Measured runs with progress bar
     results = []
     with push_cwd(opts.cwd), push_env(env_overrides), maybe_disable_gc(opts.no_gc):
         for i in range(opts.runs):
+            run_number = i + 1
+
+            # show starting state for this run
+            print_progress_line(run_number, opts.runs, status_text="starting...")
+
             run_res = run_target_once(script_path, script_args, quiet=opts.quiet_target)
             results.append(run_res)
 
-            # Print each run if:
-            # - there's only one run total, OR
-            # - user explicitly asked for --show-each
+            # after run finishes, update progress with result summary
+            short_real = f"{run_res['real']:.3f}s" if run_res['real'] is not None else "N/A"
+            short_mem = (
+                f"{run_res['rss_mb_after']:.1f}MB"
+                if run_res['rss_mb_after'] is not None
+                else "N/A"
+            )
+
+            # only show exit if it's nonzero
+            if run_res["exit_code"] != 0:
+                exit_fragment = f" exit={run_res['exit_code']}"
+            else:
+                exit_fragment = ""
+
+            print_progress_line(
+                run_number,
+                opts.runs,
+                status_text=f"done real={short_real} mem={short_mem}{exit_fragment}",
+            )
+
+            # Detailed per-run block (optional)
             if opts.runs == 1 or opts.show_each:
-                print_single_run(run_res, run_index=i + 1)
+                # newline so block doesn't collide with bar text
+                print()
+                print_single_run(run_res, run_index=run_number)
+
+        # after loop, newline so summary prints on its own line
+        print()
 
     # Summary / post-processing
     stats = summarize_runs(results)
@@ -602,7 +732,7 @@ def main():
             warmup=opts.warmup,
         )
 
-    # Optional JSON output
+    # Optional JSON/YAML output
     if opts.emit_json:
         print_json_summary(
             stats,
@@ -612,10 +742,16 @@ def main():
             warmup=opts.warmup,
         )
 
-    # Final exit code logic:
-    # - If any run exited nonzero, we fail with that code.
-    # - If perf gate fails (--max-real), we fail.
-    # - If mem gate fails (--max-mem), we fail.
+    if opts.emit_yaml:
+        print_yaml_summary(
+            stats,
+            target_script=str(script_path),
+            target_args=script_args,
+            runs=opts.runs,
+            warmup=opts.warmup,
+        )
+
+    # Final exit code logic (including gates)
     final_exit = 0
     if stats["worst_exit"] != 0:
         final_exit = stats["worst_exit"]
