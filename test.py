@@ -965,11 +965,7 @@ def ReadFileDataWithContentToArray(fp, filestart=0, seekstart=0, seekend=0, list
         return False
     if(formdel != formatspecs['format_delimiter']):
         return False
-    if(__use_new_style__):
-        inheader = ReadFileHeaderDataBySize(
-            fp, formatspecs['format_delimiter'])
-    else:
-        inheader = ReadFileHeaderDataWoSize(
+    inheader = ReadFileHeaderDataBySize(
             fp, formatspecs['format_delimiter'])
     fnumextrafieldsize = int(inheader[15], 16)
     fnumextrafields = int(inheader[16], 16)
