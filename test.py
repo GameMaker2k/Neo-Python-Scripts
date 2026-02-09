@@ -10,6 +10,7 @@ import shutil
 import hashlib
 import inspect
 import tempfile
+import configparser
 from io import open
 
 def get_importing_script_path():
@@ -19,6 +20,12 @@ def get_importing_script_path():
         if filename != __file__:  # Ignore current module's file
             return os.path.abspath(filename)
     return None
+
+def is_only_nonprintable(var):
+    """True if every character is non-printable (handles bytes via to_text)."""
+    if var is None:
+        return True
+    return all(not ch.isprintable() for ch in var)
 
 def add_format(reg, key, magic, ext, name=None, ver="001",
                new_style=True, use_advanced_list=True, use_alt_inode=False, delim="\x00"):
