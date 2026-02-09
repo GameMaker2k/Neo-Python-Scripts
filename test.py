@@ -1209,7 +1209,42 @@ def ReadFileDataWithContentToArray(fp, filestart=0, seekstart=0, seekend=0, list
     outlist.update({'fp': fp})
     return outlist
 
+def UncompressFileAlt(infile, formatspecs, compression_type="none"):
+    """
+    Decompresses the content buffer based on the compression_type field.
+    Returns a BytesIO object with the raw data.
+    """
+    if not hasattr(infile, "read"):
+        return infile
+    
+    # Ensure we are at the start of the buffer
+    infile.seek(0)
+    data = infile.read()
+    
+    # Reset for safety
+    infile.seek(0)
+    
+    out_data = None
+    
+    try:
+        if compression_type in ["bz2", "bzip2"]:
+            out_data = bz2.decompress(data)
+        elif compression_type == "lzma":
+            out_data = lzma.decompress(data)
+        elif compression_type == "zlib":
+            out_data = zlib.decompress(data)
+        else:
+            # 'none', 'auto', or unknown
+            return infile
+            
+        return io.BytesIO(out_data)
+        
+    except Exception as e:
+        # In a robust tool, you might want to log this error
+        print(f"Decompression error ({compression_type}): {e}")
+        return infile
+
 test = open("./test.arc", "rb")
-headerdata = ReadFileDataWithContentToArray(test, formatspecs=__file_format_dict__, uncompress=False)
+headerdata = ReadFileDataWithContentToArray(test, formatspecs=__file_format_dict__)
 print(headerdata)
 test.close()
